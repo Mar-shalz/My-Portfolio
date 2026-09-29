@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Portfolio CMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div id="app" hidden>
+  <aside class="sb">
+    <a class="sb-brand" href="#/">
+      <span class="sb-mark">V</span>
+      <span><strong>Portfolio</strong><small>Content portal</small></span>
+    </a>
+    <nav class="sb-nav" id="sbNav"></nav>
+    <div class="sb-foot">
+      <a class="sb-link" href="/" target="_blank" rel="noopener">View live site ↗</a>
+      <button class="sb-link" type="button" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <button class="icon-btn sb-toggle" type="button" id="sbToggle" aria-label="Menu">☰</button>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="top-actions">
+        <span class="status" id="status"></span>
+        <button class="btn btn-ghost" type="button" id="previewBtn">Preview</button>
+        <button class="btn btn-primary" type="button" id="saveBtn">Publish changes</button>
+      </div>
+    </header>
+    <section class="view" id="view" tabindex="-1"></section>
+  </div>
+</div>
+
+<div id="login" class="login" hidden>
+  <form class="login-card" id="loginForm">
+    <span class="sb-mark sb-mark-lg">V</span>
+    <h1>Welcome back</h1>
+    <p>Sign in to edit your portfolio.</p>
+    <label class="field-label" for="pw">Password</label>
+    <input class="input" id="pw" type="password" autocomplete="current-password" required>
+    <p class="login-err" id="loginErr" role="alert"></p>
+    <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    <p class="login-hint">The password lives in the <code>.env</code> file next to <code>server.js</code>.</p>
+  </form>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<div id="modalRoot"></div>
+<script src="admin.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,1339 @@
+{
+  "_rev": 10,
+  "updatedAt": "2026-10-01T10:40:11.138Z",
+  "site": {
+    "name": "Victor Ajibodu",
+    "initial": "V",
+    "role": "Lead Product Designer",
+    "location": "Lagos, Nigeria",
+    "timezone": "Africa/Lagos",
+    "seoTitle": "Victor Ajibodu | Lead Product Designer · Fintech, Commerce & SaaS",
+    "seoDescription": "Lead Product Designer in Lagos. I design fintech and commerce products people trust: mobile-first, research-led, and measured by the numbers they move.",
+    "siteUrl": "",
+    "ogImage": "/uploads/fc-app-cover.jpg",
+    "accent": "#EF5A28",
+    "defaultTheme": "system",
+    "availability": {
+      "open": true,
+      "label": "Available for new roles & projects"
+    },
+    "email": "ajiboduvictor@gmail.com",
+    "phone": "+234 813 593 5097",
+    "showPhone": true,
+    "resumeUrl": "",
+    "socials": [
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/in/victor-ajibodu/"
+      },
+      {
+        "label": "Behance",
+        "url": "https://behance.net/victorajibodu"
+      }
+    ],
+    "footerNote": "Designed & built in Lagos."
+  },
+  "hero": {
+    "eyebrow": "Lead Product Designer · Lagos",
+    "lines": [
+      "Design that earns *trust.*",
+      "Numbers that *prove it.*"
+    ],
+    "intro": "I'm **Victor Ajibodu**. I lead design at a **CBN-licensed fintech**, building products for real constraints: mobile-first, low-bandwidth, low-trust, high-stakes. Then I ship the numbers that show it worked.",
+    "primaryCta": "See the work",
+    "secondaryCta": "Let's talk",
+    "metrics": [
+      {
+        "value": "10K+",
+        "label": "Users onboarded at launch"
+      },
+      {
+        "value": "35%",
+        "label": "E-commerce conversion lift"
+      },
+      {
+        "value": "90%",
+        "label": "Less design-to-dev handoff time"
+      },
+      {
+        "value": "6+",
+        "label": "Years shipping product"
+      }
+    ],
+    "resumeCta": "Download résumé"
+  },
+  "manifesto": {
+    "eyebrow": "Prologue",
+    "text": "Most products don't fail in Figma. They fail in the gap between the brief and the real world: at the KYC wall, the broken checkout, the page nobody owns. That gap is where I work. I find the problem nobody wrote down, build the case with evidence, and ship the better thing."
+  },
+  "marquee": [
+    "Fintech",
+    "Mobile-first",
+    "Design systems",
+    "E-commerce",
+    "Research-led",
+    "Web apps",
+    "Open to remote, worldwide"
+  ],
+  "work": {
+    "eyebrow": "Chapter 01 · The work",
+    "title": "Real products. *Real turning points.*",
+    "intro": "Every project here shipped, and every one moved the metric it was designed to move. Each started with a problem nobody had written down.",
+    "otherEyebrow": "Chapter 01 · Part two",
+    "otherTitle": "More work, *still in motion.*",
+    "otherIntro": "Products in beta, in build, or in testing, each one a different domain and a different kind of hard."
+  },
+  "projects": [
+    {
+      "id": "fast-credit-app",
+      "slug": "fast-credit-app",
+      "published": true,
+      "kind": "case-study",
+      "title": "Fast Credit *Mobile App.*",
+      "client": "Fast Credit Limited",
+      "category": "Mobile · Fintech · CBN-licensed",
+      "status": "Shipped",
+      "year": "2022 to now",
+      "tags": [
+        "Mobile",
+        "Fintech",
+        "Design system"
+      ],
+      "accent": "#029247",
+      "hook": "How a branch-only lender reached 10,000 mobile users, by letting trust come before paperwork.",
+      "summary": "Nigeria's first unified finance app: savings, loans, investments and transfers in one CBN-licensed product. I led design end-to-end: 250+ alpha sessions, a progressive-KYC model that overturned the original PRD, a 60+ component design system, and a launch that onboarded 10,000 users.",
+      "cover": "/uploads/fc-app-cover.jpg",
+      "heroImage": "/uploads/fc-app-cover.jpg",
+      "stats": [
+        {
+          "value": "10K+",
+          "label": "Users at launch"
+        },
+        {
+          "value": "80%",
+          "label": "Onboarded first try"
+        },
+        {
+          "value": "~70%",
+          "label": "Fewer failed upgrades"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Role",
+          "value": "Lead Product Designer"
+        },
+        {
+          "label": "Timeline",
+          "value": "Jul 2022 to Present"
+        },
+        {
+          "label": "Platform",
+          "value": "iOS & Android"
+        },
+        {
+          "label": "Scope",
+          "value": "Research · UX · UI · Design system · A/B testing"
+        }
+      ],
+      "links": [
+        {
+          "label": "App Store",
+          "url": "https://apps.apple.com/ng/app/fast-credit-mobile/id6754325380"
+        },
+        {
+          "label": "Play Store",
+          "url": "https://play.google.com/store/apps/details?id=com.fastcreditltd.prod"
+        },
+        {
+          "label": "Behance",
+          "url": "https://www.behance.net/gallery/242356527/Fast-Credit-Finance-Company-Limited-Mobile-App"
+        }
+      ],
+      "glance": {
+        "problem": "A regulated lender with branches but no digital product, and a KYC wall that lost users before they saw a single loan offer.",
+        "solution": "Progressive 3-tier KYC: earn trust first, ask for documents once the value is clear. After launch, a BVN-first flow that removed name-mismatch lockouts.",
+        "impact": "10,000 users at launch, 80% onboarded on the first attempt, and roughly 70% fewer failed account upgrades."
+      },
+      "blocks": [
+        {
+          "type": "kpis",
+          "eyebrow": "Impact",
+          "items": [
+            {
+              "value": "10K+",
+              "label": "Users onboarded at launch"
+            },
+            {
+              "value": "80%",
+              "label": "First-attempt onboarding success"
+            },
+            {
+              "value": "25%",
+              "label": "Onboarding completion lift vs. the original PRD"
+            },
+            {
+              "value": "90%",
+              "label": "Less design-to-dev handoff time"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "eyebrow": "The brief",
+          "heading": "Branches, loyal customers, and *zero digital presence.*",
+          "body": "Customers drove to physical offices to apply for loans, check balances and start investments. Competitors were shipping apps. The company needed to move, fast.\n\nThe brief said *build a mobile banking app*. The harder question nobody had written down: **how do you onboard Nigerian users into a CBN-regulated product without losing them before their first loan?**"
+        },
+        {
+          "type": "text",
+          "eyebrow": "Research",
+          "heading": "250+ alpha sessions before a single screen reached engineering.",
+          "body": "I tested with the people Fast Credit actually serves: first-time app users, salary earners, market traders and civil servants. One friction point surfaced almost immediately: **the KYC wall.**"
+        },
+        {
+          "type": "quote",
+          "text": "I don't want to give my BVN to an app I don't trust yet. What if something goes wrong? Can I call someone?",
+          "attribution": "Civil servant, 34, Lagos · first-time fintech user"
+        },
+        {
+          "type": "text",
+          "heading": "The insight: users weren't refusing to share. *They were refusing to share everything, first.*",
+          "body": "The original flow demanded full KYC (BVN, NIN, proof of address, employment details) before a user could touch any feature. Drop-off in testing was severe. Nobody objected to verification itself; they objected to handing over everything before the app had earned a moment of trust."
+        },
+        {
+          "type": "callout",
+          "eyebrow": "The turning point",
+          "heading": "When the research said the brief was wrong, I *called the meeting.*",
+          "body": "The PRD specified a single-gate KYC flow, the standard for regulated products. My research said it would kill onboarding. I brought the PM, Head of Engineering and senior stakeholders into one room with drop-off data, real user quotes and an alternative that stayed fully inside CBN rules.",
+          "label": "The proposal: progressive 3-tier KYC",
+          "text": "**Tier 1 · Phone number only.** Explore the app and see potential loan limits. Trust is built before documents are requested.\n\n**Tier 2 · BVN + basic details.** Unlocks transfers up to ₦50,000/day and basic savings. Clear value before going deeper.\n\n**Tier 3 · Full KYC.** Unlocks full loan access, higher limits and investments. By now the user has experienced the product and trusts it."
+        },
+        {
+          "type": "text",
+          "body": "The team restructured the PRD around the tiered model and engineering rebuilt the verification pipeline. **It shipped**, and became the backbone of onboarding."
+        },
+        {
+          "type": "image",
+          "eyebrow": "Wireframes",
+          "heading": "Every edge case designed *before* the visuals.",
+          "body": "Low- to high-fidelity flows mapped onboarding from splash to dashboard, including the messy states: number already registered, terms not accepted, slow networks, BVN validation in progress.",
+          "src": "/uploads/fc-app-wireframes.jpg",
+          "caption": "Onboarding, OTP and dashboard-entry flows",
+          "wide": false
+        },
+        {
+          "type": "palette",
+          "eyebrow": "Design system",
+          "heading": "Built for trust and speed, *at the same time.*",
+          "body": "Fellix for its rounded confidence. Brand green as the single primary action colour, carrying the Fast Credit identity through every touchpoint. A 390 × 844 baseline tuned for one-handed use on the mid-range Android phones most customers carry.",
+          "colors": [
+            {
+              "hex": "#029247",
+              "name": "Brand green"
+            },
+            {
+              "hex": "#696C6C",
+              "name": "Secondary"
+            },
+            {
+              "hex": "#FFFFFF",
+              "name": "White"
+            },
+            {
+              "hex": "#000000",
+              "name": "Black"
+            },
+            {
+              "hex": "#22C55E",
+              "name": "Success"
+            },
+            {
+              "hex": "#F59E0B",
+              "name": "Warning"
+            }
+          ],
+          "specs": [
+            {
+              "label": "Typography",
+              "value": "Fellix · 14 styles"
+            },
+            {
+              "label": "Grid",
+              "value": "390 × 844 · 24 margin · 16 gutter"
+            },
+            {
+              "label": "Components",
+              "value": "60+ documented · 90% faster handoff"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/uploads/fc-app-grid.jpg",
+          "caption": "Grid system: 390 × 844 mobile baseline",
+          "wide": false
+        },
+        {
+          "type": "gallery",
+          "eyebrow": "The product",
+          "heading": "Four modules. *One unified product.*",
+          "body": "Home, Investments, Loans and a More panel with account upgrade, each built for real Nigerian conditions: patchy connectivity, older devices, and people making real financial decisions.",
+          "images": [
+            {
+              "src": "/uploads/fc-app-investment.jpg",
+              "label": "Investments"
+            },
+            {
+              "src": "/uploads/fc-app-loan.jpg",
+              "label": "Loans"
+            },
+            {
+              "src": "/uploads/fc-app-more.jpg",
+              "label": "More & upgrade"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "eyebrow": "Testing what we believed",
+          "heading": "Four screens, eight variants, *measured decisions.*",
+          "body": "During alpha, four screens showed friction. I tested two variants of each and let the evidence decide before launch.",
+          "src": "/uploads/fc-app-ab-testing.jpg",
+          "caption": "A/B tests: Dashboard, Transaction history, Transfer and Loan",
+          "wide": true
+        },
+        {
+          "type": "cards",
+          "style": "neutral",
+          "columns": 2,
+          "items": [
+            {
+              "label": "Dashboard",
+              "body": "**A:** minimal white layout with icon-only actions.\n**B:** green hero card, Withdraw/Fund surfaced, recent transactions, SME-loan banner. Users oriented faster and explored more features in their first session."
+            },
+            {
+              "label": "Transaction history",
+              "body": "**A:** a date-grouped list.\n**B:** search by bank or account, filter tabs and a calendar filter. A passive log became an active lookup tool."
+            },
+            {
+              "label": "Transfer",
+              "body": "**A:** two large icon buttons, an extra tap with no context.\n**B:** a top toggle, recent-beneficiary avatars, source account, daily limit and a remark field. Less friction before commitment."
+            },
+            {
+              "label": "Loans: the biggest shift",
+              "body": "**A:** a red, centred *Apply now* with no repayment context.\n**B:** outstanding balance up top, the active loan broken down (tenor, progress, monthly repayment), and Top-up for existing borrowers. Red became brand green. **A prompt became a financial-management tool.**"
+            }
+          ]
+        },
+        {
+          "type": "kpis",
+          "eyebrow": "Launch",
+          "heading": "10,000 users in the first weeks. *80% onboarded on the first attempt.*",
+          "body": "The 20% who didn't finish first time were mostly blocked by a BVN mismatch between their registered details and the national database, a data-quality issue outside the product. **Naming that distinction kept the team from \"fixing\" an onboarding flow that wasn't broken.**",
+          "items": [
+            {
+              "value": "10K+",
+              "label": "Users at launch"
+            },
+            {
+              "value": "80%",
+              "label": "First-attempt success"
+            },
+            {
+              "value": "60+",
+              "label": "Documented components"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "eyebrow": "Round two",
+          "heading": "Then real usage exposed a failure *the tiers couldn't fix.*",
+          "body": "Once people hit the BVN upgrade at volume, a quieter problem surfaced, one that's invisible in a demo. The flow asked users to **type their name alongside their BVN, then matched the two.** A real slice of Nigerians can't pass that match through no fault of their own: women who married and haven't updated their BVN, people whose BVN carries a legal name they never use, small differences in spelling or word order. The system read each one as a mismatch and silently blocked the upgrade."
+        },
+        {
+          "type": "quote",
+          "text": "My BVN still has my maiden name. The app keeps telling me my details don't match, but they are mine.",
+          "attribution": "Recurring theme across post-launch support tickets"
+        },
+        {
+          "type": "steps",
+          "heading": "The fix: *don't make users prove what the BVN already knows.*",
+          "body": "Instead of typing details to be matched against a record, the user provides the BVN, proves they own it, and confirms what comes back. The name is never typed, so it can never mismatch.",
+          "items": [
+            {
+              "title": "Enter BVN",
+              "body": "One field. Nothing to mistype."
+            },
+            {
+              "title": "Verify ownership",
+              "body": "A one-time code goes to the phone number tied to that BVN."
+            },
+            {
+              "title": "Confirm details",
+              "body": "We show the name and data pulled from the BVN; the user confirms it's them."
+            },
+            {
+              "title": "Liveness check",
+              "body": "A quick selfie confirms a real person matches the verified BVN."
+            },
+            {
+              "title": "Secure the account",
+              "body": "Set PIN and password. Upgrade complete."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "label": "Why the inversion works",
+          "text": "The old flow made users responsible for a record they don't control. The new flow makes the **BVN the source of truth** and the user the **confirmer**, not the data-entry clerk. It also turns a dry compliance step into a trust moment: people see exactly which data is being used, and agree to it."
+        },
+        {
+          "type": "kpis",
+          "items": [
+            {
+              "value": "~70%",
+              "label": "Fewer failed KYC upgrades"
+            },
+            {
+              "value": "1",
+              "label": "Field to type: the BVN"
+            },
+            {
+              "value": "5",
+              "label": "Steps, end to end"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "eyebrow": "What's next",
+          "heading": "One group the BVN-first flow *still can't fully reach.*",
+          "body": "Pull-and-confirm leans on one assumption: that the user can still receive a code on the number tied to their BVN. Some can't: numbers registered years ago by an enrolment agent, SIMs swapped or lost. We monitor and fund this, holding OTP friction at a managed **~7–8%**. But that is still real people, and it lands on the same group progressive KYC was built to protect.\n\nThe next move isn't another screen. It's a research-backed proposal to make verification lean less on a number the user can't control, without loosening a single CBN requirement. That work is underway: quantifying the failure, mapping who it hits, and testing an easier path to a verified account."
+        },
+        {
+          "type": "cards",
+          "style": "learning",
+          "columns": 3,
+          "eyebrow": "Reflection",
+          "heading": "What this project *taught me.*",
+          "items": [
+            {
+              "label": "Compliance ≠ friction",
+              "body": "Regulation defines *what* you verify, not *when* you ask. Sequencing is a design decision."
+            },
+            {
+              "label": "Name the real failure",
+              "body": "Separating product failures from data failures kept the team focused on problems we could actually fix."
+            },
+            {
+              "label": "Production tells the truth",
+              "body": "The quietest failures only show up at volume. Support tickets are research, too."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fast-credit-website",
+      "slug": "fast-credit-website",
+      "published": true,
+      "kind": "case-study",
+      "title": "Fast Credit *Website.*",
+      "client": "Fast Credit Limited",
+      "category": "Web · Fintech · Self-initiated",
+      "status": "Shipped",
+      "year": "",
+      "tags": [
+        "Web",
+        "Fintech",
+        "Self-initiated"
+      ],
+      "accent": "#1F8A4C",
+      "hook": "Nobody asked for this redesign. One overheard conversation, one evening's audit, and a calculator nobody requested.",
+      "summary": "Marketing said the site wasn't converting. Sales said leads arrived confused. Nobody owned the fix, so I did: an independent audit, six structural failures, a case to leadership, and a full redesign, including a loan calculator that became the most-engaged element on the site.",
+      "cover": "/uploads/fc-web-cover.jpg",
+      "heroImage": "/uploads/fc-web-cover.jpg",
+      "stats": [
+        {
+          "value": "70%",
+          "label": "Engagement lift"
+        },
+        {
+          "value": "6",
+          "label": "Structural failures fixed"
+        },
+        {
+          "value": "0",
+          "label": "Briefs: self-initiated"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Role",
+          "value": "Lead Product Designer"
+        },
+        {
+          "label": "Trigger",
+          "value": "Self-initiated audit"
+        },
+        {
+          "label": "Platform",
+          "value": "Web · Desktop & mobile"
+        },
+        {
+          "label": "Scope",
+          "value": "Audit · IA · UX · UI · Stakeholder case"
+        }
+      ],
+      "links": [
+        {
+          "label": "Visit live site",
+          "url": "https://www.fastcredit-ng.com/"
+        },
+        {
+          "label": "Behance",
+          "url": "https://www.behance.net/gallery/221755913/Fast-Credit-Limited-Website"
+        }
+      ],
+      "glance": {
+        "problem": "A website that confused visitors and under-delivered for marketing and sales, with no one assigned to fix it.",
+        "solution": "A self-initiated audit, a consolidated information architecture, and a custom loan calculator that answers the visitor's real question: can I afford this?",
+        "impact": "70% more engagement, lower bounce, and leads who arrived already understanding what they were applying for."
+      },
+      "blocks": [
+        {
+          "type": "kpis",
+          "eyebrow": "Impact",
+          "items": [
+            {
+              "value": "70%",
+              "label": "Website engagement increase"
+            },
+            {
+              "value": "6",
+              "label": "Structural UX failures fixed"
+            },
+            {
+              "value": "#1",
+              "label": "Most-engaged element: the unrequested calculator"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "eyebrow": "How it started",
+          "heading": "I walked past a conversation. *That evening, I had the audit.*",
+          "body": "Marketing was frustrated the website wasn't converting. Sales said leads were arriving confused about what Fast Credit actually offered. Everyone felt the problem; nobody had a plan.\n\nI ran an independent audit that evening. The picture was clear within the hour: **the site wasn't just dated; it had structural problems no amount of visual polish could fix.** The next week, I was in front of leadership with findings and a proposal."
+        },
+        {
+          "type": "image",
+          "eyebrow": "The audit",
+          "heading": "Six failures. *None could be solved by repainting.*",
+          "src": "/uploads/fc-web-before.jpg",
+          "caption": "Before: five sparse product pages, no hierarchy, weak calls to action",
+          "wide": false
+        },
+        {
+          "type": "cards",
+          "style": "problem",
+          "columns": 3,
+          "items": [
+            {
+              "label": "01 · Dated",
+              "body": "**No trust signals.** The visual design lagged the brand, costing credibility before a word was read."
+            },
+            {
+              "label": "02 · Navigation",
+              "body": "**A maze of five product pages** (Loans, Investments, Fast Thrift, Public Workers, BNPL) to understand one offering."
+            },
+            {
+              "label": "03 · Overload",
+              "body": "**Every page explained everything.** No hierarchy, no obvious next step anywhere in the journey."
+            },
+            {
+              "label": "04 · Sparse",
+              "body": "**Content spread thin.** Pages that needed depth were empty; pages that belonged together were siloed."
+            },
+            {
+              "label": "05 · Imagery",
+              "body": "**Generic stock photography** with no link to the brand or its customers, undermining trust instead of building it."
+            },
+            {
+              "label": "06 · Layout",
+              "body": "**No consistent grid.** Arbitrary spacing and broken rhythm made the site feel assembled in parts."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "eyebrow": "Restructure first",
+          "heading": "Five sparse pages became *one purposeful structure.*",
+          "body": "The first decision was structural, not visual: consolidate navigation so every product earned its place in the hierarchy. Then I added something no stakeholder had asked for but every visitor needed: **a loan calculator**, answering the only question that matters before applying: *can I afford this?*",
+          "src": "/uploads/fc-web-wireframes.jpg",
+          "caption": "Desktop and mobile wireframes: restructured IA and the new loan calculator",
+          "wide": false
+        },
+        {
+          "type": "image",
+          "eyebrow": "The homepage",
+          "heading": "A homepage that finally *tells the story.*",
+          "body": "A clear value proposition. Trust signals up front: CBN-licensed, Bbb-rated by Augusto & Co. App downloads surfaced, products consolidated, benefits explained, testimonials and partners as proof. The whole pitch reads in one scroll.",
+          "src": "/uploads/fc-web-home.jpg",
+          "caption": "Shipped homepage: hero, products, benefits, testimonials, partners",
+          "wide": false
+        },
+        {
+          "type": "image",
+          "eyebrow": "The full site",
+          "heading": "Every page rebuilt, including *the one nobody asked for.*",
+          "body": "About, every loan product, the calculator, blog, and contact with office locations, designed at desktop and mobile breakpoints.",
+          "src": "/uploads/fc-web-full-site.jpg",
+          "caption": "About, Loans, Fast Pearl, Calculator, Blog, Contact",
+          "wide": false
+        },
+        {
+          "type": "text",
+          "eyebrow": "Outcome",
+          "heading": "70% more engagement. The unrequested calculator became *the most-used thing on the site.*",
+          "body": "Engagement rose 70% and bounce rate fell. Sales reported a shift in lead quality: customers now arrived already understanding what they were applying for.\n\nThe calculator was never in a brief, because nobody thought to put it there. **That's the work I value most: the thing that wasn't assigned, but needed to exist.**"
+        },
+        {
+          "type": "cards",
+          "style": "learning",
+          "columns": 3,
+          "eyebrow": "Reflection",
+          "heading": "What this project *taught me.*",
+          "items": [
+            {
+              "label": "Initiative needs evidence",
+              "body": "An audit turned a hallway complaint into a mandate. Opinions start debates; evidence starts projects."
+            },
+            {
+              "label": "Design for the decision",
+              "body": "Visitors weren't asking for more pages. They were asking *can I afford this?* The calculator answered it."
+            },
+            {
+              "label": "Structure before style",
+              "body": "Consolidating the IA did more for clarity than any visual change could have."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evamor-store",
+      "slug": "evamor-store",
+      "published": true,
+      "kind": "case-study",
+      "title": "Evamor *Store.*",
+      "client": "Evamor Water",
+      "category": "E-commerce · Consumer · Nigeria",
+      "status": "Shipped",
+      "year": "",
+      "tags": [
+        "E-commerce",
+        "Consumer",
+        "Responsive"
+      ],
+      "accent": "#124D91",
+      "hook": "A premium water brand was losing orders to its own website. Rebuilt around one job: ordering from any screen.",
+      "summary": "Evamor sells premium alkaline dispenser water to homes, offices, hotels and restaurants across Lagos. The product was excellent; the website was the bottleneck. I rebuilt it around a single job: getting an order placed from any screen. Conversions rose 35% in three months.",
+      "cover": "/uploads/evamor-cover.jpg",
+      "heroImage": "/uploads/evamor-hero.jpg",
+      "stats": [
+        {
+          "value": "35%",
+          "label": "Conversion lift"
+        },
+        {
+          "value": "20%",
+          "label": "Sales growth, year 1"
+        },
+        {
+          "value": "3 mo",
+          "label": "To measurable results"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Role",
+          "value": "Product Designer"
+        },
+        {
+          "label": "Type",
+          "value": "E-commerce redesign"
+        },
+        {
+          "label": "Platform",
+          "value": "Web · Mobile-first responsive"
+        },
+        {
+          "label": "Scope",
+          "value": "IA · Checkout UX · Visual design"
+        }
+      ],
+      "links": [
+        {
+          "label": "Visit live site",
+          "url": "https://www.evamorwater.ng/"
+        }
+      ],
+      "glance": {
+        "problem": "Visitors couldn't find how to order, the mobile experience broke, and the order form asked too much, too early.",
+        "solution": "A sitemap rebuilt around purchase intent, a persistent Order Now path one click from anywhere, and a one-page order form with transparent pricing.",
+        "impact": "35% more conversions within three months, driven mostly by mobile, and 20% sales growth in the first year."
+      },
+      "blocks": [
+        {
+          "type": "kpis",
+          "eyebrow": "Impact",
+          "items": [
+            {
+              "value": "35%",
+              "label": "Conversion lift in 3 months"
+            },
+            {
+              "value": "20%",
+              "label": "Sales growth in year 1"
+            },
+            {
+              "value": "1",
+              "label": "Click to order, from any page"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "eyebrow": "The problem",
+          "heading": "A strong product. *A website working against it.*",
+          "body": "Evamor Water is a premium Nigerian brand: alkaline, BPA-free, 5-gallon dispenser bottles for health-conscious homes, offices, hotels and restaurants across Lagos. The product was excellent. The website was the bottleneck, and it was costing sales at every step."
+        },
+        {
+          "type": "cards",
+          "style": "problem",
+          "columns": 3,
+          "items": [
+            {
+              "label": "01 · Navigation",
+              "body": "**Order Now was hidden.** You had to already know it existed. The IA assumed familiarity the visitor didn't have."
+            },
+            {
+              "label": "02 · Mobile",
+              "body": "**Most Nigerian traffic is mobile**, and the site buckled there: awkward layouts, mistuned touch targets, inconsistent type."
+            },
+            {
+              "label": "03 · Checkout",
+              "body": "**The order form asked too much, too early,** with no context on delivery or price. People abandoned before submitting."
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "eyebrow": "Restructure",
+          "heading": "The path to purchase: *one click from anywhere.*",
+          "body": "I rebuilt the sitemap around the visitor's real intent (understand the product, trust the brand, place an order) and made Order Now persistent on every page.",
+          "src": "/uploads/evamor-wireframes.jpg",
+          "caption": "Wireframes: Home, About, Products and Order · desktop and mobile",
+          "wide": true
+        },
+        {
+          "type": "palette",
+          "eyebrow": "Visual identity",
+          "heading": "Deep ocean blues. *Trust, by association.*",
+          "body": "A palette of ocean blues to signal purity, quality and trust. Poppins for clean neutrality that stays legible on small, bright screens.",
+          "colors": [
+            {
+              "hex": "#CFE5FF",
+              "name": "Sky"
+            },
+            {
+              "hex": "#043A96",
+              "name": "Navy"
+            },
+            {
+              "hex": "#124D91",
+              "name": "Ocean"
+            },
+            {
+              "hex": "#002055",
+              "name": "Deep navy"
+            },
+            {
+              "hex": "#F6F6F6",
+              "name": "Off-white"
+            },
+            {
+              "hex": "#000000",
+              "name": "Black"
+            }
+          ],
+          "specs": []
+        },
+        {
+          "type": "image",
+          "eyebrow": "The flow",
+          "heading": "Home, story, products, order: *one cohesive flow.*",
+          "body": "About (mission, vision, values), detailed product pages with specs and benefits, and an order page rebuilt for clarity: name, address, phone, a quantity selector and transparent pricing, all on one screen.",
+          "src": "/uploads/evamor-full-site.jpg",
+          "caption": "Home, About, Core values, Products and Order",
+          "wide": true
+        },
+        {
+          "type": "text",
+          "eyebrow": "Outcome",
+          "heading": "From digital brochure to *acquisition channel.*",
+          "body": "Three months after launch, conversions were up 35%, with the biggest gains on **mobile**, the segment the old site had failed. By the end of year one, sales had grown 20%, and the website was working as a genuine acquisition channel rather than a digital brochure."
+        },
+        {
+          "type": "cards",
+          "style": "learning",
+          "columns": 2,
+          "eyebrow": "Reflection",
+          "heading": "What this project *taught me.*",
+          "items": [
+            {
+              "label": "IA is conversion design",
+              "body": "The biggest lift came from moving one path to the surface, not from a new coat of paint."
+            },
+            {
+              "label": "Design for the real device",
+              "body": "Mobile drove the gains. Designing for the phone in your customer's hand isn't optional in Lagos."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cedaa-yoghurt",
+      "slug": "cedaa-yoghurt",
+      "published": false,
+      "kind": "case-study",
+      "title": "Cedaa *Yoghurt.*",
+      "client": "Cedaa Yoghurt",
+      "category": "Web · FMCG · Brand",
+      "status": "Shipped",
+      "year": "",
+      "tags": [
+        "Web",
+        "FMCG",
+        "Brand system"
+      ],
+      "accent": "#EB4922",
+      "hook": "Twenty years of craft, hidden behind a template. Three weeks to make the website as good as the yoghurt.",
+      "summary": "A Nigerian dairy with 20+ years of heritage, NAFDAC and SON certification, and a loyal customer base, all represented by a generic template with no mobile design. In three weeks I delivered a refined identity, a 12-column design system, and a mobile-responsive site that finally reflects the brand.",
+      "cover": "/uploads/cedaa-cover.jpg",
+      "heroImage": "/uploads/cedaa-hero.jpg",
+      "stats": [
+        {
+          "value": "3 wk",
+          "label": "Concept to handoff"
+        },
+        {
+          "value": "12-col",
+          "label": "Design system"
+        },
+        {
+          "value": "20+ yr",
+          "label": "Heritage, finally visible"
+        }
+      ],
+      "meta": [
+        {
+          "label": "Role",
+          "value": "Product Designer"
+        },
+        {
+          "label": "Timeline",
+          "value": "3 weeks"
+        },
+        {
+          "label": "Platform",
+          "value": "Web · Desktop & mobile"
+        },
+        {
+          "label": "Scope",
+          "value": "Brand elevation · Design system · UI"
+        }
+      ],
+      "links": [
+        {
+          "label": "Visit live site",
+          "url": "https://www.cedaayogurt.com/"
+        }
+      ],
+      "glance": {
+        "problem": "A premium product line undermined by a template site: no identity, no brand story, no mobile experience.",
+        "solution": "Evolution, not revolution: keep the brand's equity, refine it into a deliberate system, and give every product room to sell itself.",
+        "impact": "A mobile-ready brand platform in three weeks, with a system the team can extend without breaking it."
+      },
+      "blocks": [
+        {
+          "type": "image",
+          "eyebrow": "The gap",
+          "heading": "Every ingredient of a premium brand. *A template undermining all of it.*",
+          "body": "Cedaa had 20+ years of operation, NAFDAC and SON certifications, a loyal customer base across Ogun State, and a product line that deserved shelf space next to national players. The website was the one thing working against them.",
+          "src": "/uploads/cedaa-before.jpg",
+          "caption": "Before: a generic template: flat identity, no emotional pull, no mobile layout",
+          "wide": false
+        },
+        {
+          "type": "cards",
+          "style": "problem",
+          "columns": 2,
+          "items": [
+            {
+              "label": "01 · Identity",
+              "body": "**No brand presence.** A generic pink hero and slider; nothing signalled quality, heritage or a 20-year story."
+            },
+            {
+              "label": "02 · Mobile",
+              "body": "**No mobile design.** FMCG buyers research on their phones, especially for home delivery. Desktop-only meant invisible."
+            },
+            {
+              "label": "03 · Products",
+              "body": "**Good photography, buried** in a flat grid with no hierarchy, no variants and no reason to choose."
+            },
+            {
+              "label": "04 · Story",
+              "body": "**Factual but cold.** Mission, vision and values were listed, never felt."
+            }
+          ]
+        },
+        {
+          "type": "palette",
+          "eyebrow": "Design decisions",
+          "heading": "Evolution, not revolution. *Elevate the brand, don't replace it.*",
+          "body": "The brief was elevation, not a rebrand. I kept the existing red and white and refined them into a deliberate palette, with a warm off-white base that lets product photography breathe. Urbanist brings confident geometry, premium without feeling cold.",
+          "colors": [
+            {
+              "hex": "#EB4922",
+              "name": "Pomegranate"
+            },
+            {
+              "hex": "#333333",
+              "name": "Mine shaft"
+            },
+            {
+              "hex": "#F1EEE6",
+              "name": "Spring wood"
+            },
+            {
+              "hex": "#FFFFFF",
+              "name": "White"
+            }
+          ],
+          "specs": [
+            {
+              "label": "Typography",
+              "value": "Urbanist · confident geometry"
+            },
+            {
+              "label": "Grid",
+              "value": "12-column · 1512 max · 80 gutter"
+            },
+            {
+              "label": "System",
+              "value": "Documented components · tokens"
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "eyebrow": "The platform",
+          "heading": "A site Cedaa's team can *scale on their own.*",
+          "body": "A benefit-led hero (*Deliciously nutritious. Made for every moment.*), a catalogue tabbed by flavour (Vanilla, Unsweetened, Strawberry, Pineapple), Our Story, Why Cedaa, Core Values, a store finder with maps, newsletter and a full footer. Responsive throughout.",
+          "src": "/uploads/cedaa-full-site.jpg",
+          "caption": "Hero, Products, Story, Why Cedaa, Values, Find a store, Contact",
+          "wide": false
+        },
+        {
+          "type": "cards",
+          "style": "solution",
+          "columns": 2,
+          "eyebrow": "Outcome",
+          "heading": "From template to *premium brand platform*, in three weeks.",
+          "items": [
+            {
+              "label": "Brand elevation",
+              "body": "A premium identity that communicates quality, heritage and trust, without starting from scratch."
+            },
+            {
+              "label": "Scalable system",
+              "body": "12-column grid, documented components and tokens. New pages and campaigns ship without breaking the design."
+            },
+            {
+              "label": "Mobile-first",
+              "body": "Full mobile alongside desktop, so customers can discover, explore and locate Cedaa on any device."
+            },
+            {
+              "label": "Product storytelling",
+              "body": "Each flavour gets its own space: sizes, taste notes, nutrition callouts and photography that makes it desirable."
+            }
+          ]
+        },
+        {
+          "type": "cards",
+          "style": "learning",
+          "columns": 2,
+          "eyebrow": "Reflection",
+          "heading": "What this project *taught me.*",
+          "items": [
+            {
+              "label": "Elevation is restraint",
+              "body": "Keep the equity people already recognise; remove the noise around it."
+            },
+            {
+              "label": "Systems outlive launches",
+              "body": "Three weeks of work only compounds if the team can extend it without me."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "altirev",
+      "slug": "altirev-election-monitoring",
+      "published": true,
+      "kind": "card",
+      "title": "Altirev *Election Monitoring.*",
+      "category": "Gov / Civic · SaaS",
+      "status": "Beta",
+      "year": "",
+      "tags": [
+        "Civic",
+        "SaaS",
+        "Dashboard"
+      ],
+      "accent": "#6D5DF6",
+      "hook": "Real-time election monitoring for civic organisations across Nigeria.",
+      "summary": "A multi-role platform built for accuracy under pressure, designed to scale across thousands of polling units, where every reading has to be trusted on election day.",
+      "cover": "",
+      "stats": [
+        {
+          "value": "300+",
+          "label": "Screens designed"
+        },
+        {
+          "value": "260+",
+          "label": "Hours of work"
+        },
+        {
+          "value": "Multi",
+          "label": "Role architecture"
+        }
+      ],
+      "links": [],
+      "meta": [],
+      "blocks": [],
+      "glance": {}
+    },
+    {
+      "id": "walk-the-aisle",
+      "slug": "walk-the-aisle",
+      "published": true,
+      "kind": "card",
+      "title": "Walk the *Aisle.*",
+      "category": "Consumer · Mobile",
+      "status": "Completed",
+      "year": "",
+      "tags": [
+        "Consumer",
+        "iOS",
+        "Android"
+      ],
+      "accent": "#C0587E",
+      "hook": "A wedding-planning app for the most stressful party of your life.",
+      "summary": "Guest lists of 200+, vendor coordination and event timelines in one calm mobile product, designed end to end, from research to final handoff.",
+      "cover": "",
+      "stats": [
+        {
+          "value": "200+",
+          "label": "Guests managed"
+        },
+        {
+          "value": "iOS",
+          "label": "+ Android"
+        },
+        {
+          "value": "E2E",
+          "label": "Research to handoff"
+        }
+      ],
+      "links": [],
+      "meta": [],
+      "blocks": [],
+      "glance": {}
+    },
+    {
+      "id": "fast-credit-internet-banking",
+      "slug": "fast-credit-internet-banking",
+      "published": true,
+      "kind": "card",
+      "title": "Internet *Banking.*",
+      "category": "Fintech · Web",
+      "status": "In development",
+      "year": "",
+      "tags": [
+        "Fintech",
+        "Web app",
+        "0 → 1"
+      ],
+      "accent": "#029247",
+      "hook": "Fast Credit's first-ever internet banking platform.",
+      "summary": "Savings, loans, transfers and account management, brought to the web for a CBN-licensed institution, a 0→1 build with session security and desktop-scale data views at its core.",
+      "cover": "",
+      "stats": [
+        {
+          "value": "First",
+          "label": "Ever for the organisation"
+        },
+        {
+          "value": "Web",
+          "label": "New platform"
+        },
+        {
+          "value": "0→1",
+          "label": "Ground-up build"
+        }
+      ],
+      "links": [],
+      "meta": [],
+      "blocks": [],
+      "glance": {}
+    },
+    {
+      "id": "chopbaze",
+      "slug": "chopbaze",
+      "published": true,
+      "kind": "card",
+      "title": "Chopbaze *Marketplace.*",
+      "category": "Foodtech · Marketplace",
+      "status": "Co-founder · In testing",
+      "year": "",
+      "tags": [
+        "Foodtech",
+        "Marketplace",
+        "Founder"
+      ],
+      "accent": "#E0A100",
+      "hook": "A two-sided marketplace for bulk food.",
+      "summary": "Connecting bulk buyers with the vendors who supply them. As co-founder I own both surfaces, the buyer app and vendor tooling, from strategy through design.",
+      "cover": "",
+      "stats": [
+        {
+          "value": "2-sided",
+          "label": "Marketplace"
+        },
+        {
+          "value": "Founder",
+          "label": "Own the product"
+        },
+        {
+          "value": "Testing",
+          "label": "Iterating now"
+        }
+      ],
+      "links": [],
+      "meta": [],
+      "blocks": [],
+      "glance": {}
+    }
+  ],
+  "process": {
+    "eyebrow": "Chapter 02 · The method",
+    "title": "From idea to live, *in three acts.*",
+    "intro": "Not a rigid template, but the through-line behind every project here. Find the real problem, build the system that answers it, then ship and prove it moved.",
+    "steps": [
+      {
+        "label": "Act I · Understand",
+        "title": "Find the *real* problem, not the one in the brief.",
+        "body": "Interviews, alpha sessions, analytics, competitor teardowns. On Fast Credit I ran 250+ sessions before a screen reached engineering, and the research overturned the original PRD.",
+        "chips": [
+          "250+ alpha sessions",
+          "PRD overturned with evidence",
+          "Real Nigerian contexts"
+        ]
+      },
+      {
+        "label": "Act II · Design the system",
+        "title": "Design every edge case, then *build the system.*",
+        "body": "Every messy state resolved before the visuals, then tokens, components and documentation so the team ships consistently and fast. Progressive KYC was born here.",
+        "chips": [
+          "60+ documented components",
+          "90% faster handoff",
+          "3-tier progressive KYC"
+        ]
+      },
+      {
+        "label": "Act III · Ship & prove",
+        "title": "Test, ship, then *measure what moved.*",
+        "body": "A/B tests where friction showed, a clean handoff, and honest post-launch numbers. Design isn't done when it's pretty. It's done when the metric moves.",
+        "chips": [
+          "10K+ users at launch",
+          "80% first-try onboarding",
+          "70% engagement lift"
+        ]
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "What I bring",
+    "title": "What I bring to *your team.*",
+    "intro": "Product design isn't pixels. It's making the right thing exist, with the research, rigour and stakeholder alignment to move a business outcome.",
+    "items": [
+      {
+        "title": "Product design",
+        "body": "End-to-end design across mobile, web and SaaS, from problem definition to production-ready specs.",
+        "list": [
+          "iOS & Android apps",
+          "Web apps & dashboards",
+          "Websites & landing pages",
+          "E-commerce & checkout flows"
+        ]
+      },
+      {
+        "title": "Design systems",
+        "body": "Component libraries, tokens and documentation that cut handoff time and keep design and engineering aligned at scale.",
+        "list": [
+          "Figma component libraries",
+          "Design-token architecture",
+          "Grid & type systems",
+          "Developer handoff docs"
+        ]
+      },
+      {
+        "title": "Research & strategy",
+        "body": "Research that surfaces the problem behind the brief, and testing that validates real decisions, even when the data points away from the plan.",
+        "list": [
+          "Interviews & usability testing",
+          "A/B testing & iteration",
+          "Journey mapping & IA",
+          "Stakeholder workshops"
+        ]
+      },
+      {
+        "title": "Product partnership",
+        "body": "I don't stop at delivering files. I find the problem behind the brief and build the case for the better answer.",
+        "list": [
+          "Product strategy",
+          "UX audits & gap analysis",
+          "Self-initiated improvements",
+          "Cross-functional advocacy"
+        ]
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "In their words",
+    "title": "What working with me *is like.*",
+    "items": [
+      {
+        "published": false,
+        "quote": "Replace this with a short, specific quote from a PM, engineer or founder you have worked with. Two or three sentences about a result is ideal.",
+        "name": "Testing 1",
+        "role": "Product Manager, Company",
+        "avatar": ""
+      },
+      {
+        "published": false,
+        "quote": "Replace this with a second quote, ideally from someone in a different role (for example an engineering lead).",
+        "name": "Their name",
+        "role": "Engineering Lead, Company",
+        "avatar": ""
+      }
+    ],
+    "show": true
+  },
+  "about": {
+    "eyebrow": "Chapter 03 · The person",
+    "title": "I don't wait to be asked. I find the problem, *build the case,* and ship the better thing.",
+    "portrait": "",
+    "preview": "I'm a Lead Product Designer at **Fast Credit Limited**, the CBN-licensed fintech behind Nigeria's first unified finance app, with 6+ years shipping across fintech, e-commerce and SaaS.\n\nThe website redesign was self-initiated. The progressive KYC that became the backbone of onboarding came from overturning the brief with research. The loan calculator was never in scope, until I put it there. **The work I'm proudest of is the work nobody assigned.**",
+    "pageTitle": "I design products that *work in the real world.*",
+    "pageLead": "Not just in Figma. Not just in pitches. **In production, with real users, in real conditions.**",
+    "body": "I'm Victor Ajibodu, a Lead Product Designer in Lagos with 6+ years building digital products across fintech, e-commerce and SaaS. I currently lead design at **Fast Credit Limited**, the CBN-licensed fintech behind Nigeria's first unified finance app.\n\nI work where **user research, systems thinking and product strategy** meet. Most of my work serves Nigeria and the wider continent: mobile-first, low-bandwidth, high-stakes contexts where the user can't afford a bad experience and the designer can't afford assumptions. The constraints make the work sharper.\n\nI don't wait to be asked. **The Fast Credit website redesign was self-initiated.** The progressive KYC that became the backbone of onboarding came from overturning the original brief with research. The loan calculator was never in scope, until I put it there.\n\nThe work I'm proudest of is rarely the work that was assigned. It's the gap nobody had words for, the problem everyone felt but nobody had named. **That's where product design earns its keep.**\n\nLagos isn't a constraint. It's the proof of competence.",
+    "stats": [
+      {
+        "value": "6+ yrs",
+        "label": "Shipping production work in fintech, e-commerce and SaaS"
+      },
+      {
+        "value": "250+",
+        "label": "Usability-test participants on Fast Credit alone"
+      },
+      {
+        "value": "300+",
+        "label": "Screens designed for Altirev's election platform"
+      },
+      {
+        "value": "Lagos",
+        "label": "Based in Nigeria · open to remote work worldwide"
+      }
+    ],
+    "now": [
+      {
+        "label": "Leading",
+        "text": "Design for Fast Credit's first internet-banking platform"
+      },
+      {
+        "label": "Building",
+        "text": "Chopbaze, a two-sided bulk-food marketplace, as co-founder"
+      },
+      {
+        "label": "Researching",
+        "text": "An easier verification path for users whose BVN phone is unreachable"
+      }
+    ],
+    "experience": [
+      {
+        "role": "Lead Product Designer",
+        "company": "Fast Credit Limited",
+        "period": "Jul 2022 to Present",
+        "location": "Lagos"
+      },
+      {
+        "role": "Design Team Lead",
+        "company": "Bincom Dev Center",
+        "period": "Mar 2021 to Jul 2022",
+        "location": "Lagos"
+      },
+      {
+        "role": "Product Designer",
+        "company": "Freelance",
+        "period": "2020 to Present",
+        "location": "Remote"
+      }
+    ],
+    "capabilities": [
+      "Product strategy",
+      "User research",
+      "Interaction design",
+      "Design systems",
+      "Prototyping",
+      "A/B testing",
+      "Figma",
+      "Mobile-first",
+      "Information architecture",
+      "Usability testing",
+      "Stakeholder alignment",
+      "Compliance UX (CBN)",
+      "Design tokens",
+      "Dev handoff"
+    ],
+    "domains": [
+      "Fintech",
+      "E-commerce",
+      "SaaS",
+      "FMCG",
+      "EdTech",
+      "Gov / Civic"
+    ]
+  },
+  "contact": {
+    "eyebrow": "Epilogue · Your chapter",
+    "title": "Have a problem worth *designing for?*",
+    "body": "I'm open to product design roles and select projects. If you're a founder, PM or design lead with a real product challenge, let's talk.",
+    "cta": "Email me"
+  }
+}
