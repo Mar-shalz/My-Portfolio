@@ -1,6 +1,6 @@
 {
-  "_rev": 11,
-  "updatedAt": "2026-10-01T15:32:39.383Z",
+  "_rev": 12,
+  "updatedAt": "2026-10-01T15:33:29.147Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -437,7 +437,7 @@
     {
       "id": "fast-credit-website",
       "slug": "fast-credit-website",
-      "published": false,
+      "published": true,
       "kind": "case-study",
       "title": "Fast Credit *Website.*",
       "client": "Fast Credit Limited",
