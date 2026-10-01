@@ -12,7 +12,7 @@
     "siteUrl": "",
     "ogImage": "/uploads/fc-app-cover.jpg",
     "accent": "#EF5A28",
-    "defaultTheme": "system",
+    "defaultTheme": "dark",
     "availability": {
       "open": true,
       "label": "Available for new roles & projects"

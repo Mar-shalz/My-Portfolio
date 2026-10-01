@@ -349,8 +349,8 @@
         },
       });
       const img = card.querySelector('[data-parallax]');
-      const fill = card.querySelector('.stack-media.is-fill');
-      if (img) gsap.fromTo(img, { yPercent: fill ? -5 : 5 }, { yPercent: fill ? 5 : -4, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
+      const framed = card.querySelector('.stack-media.is-framed');
+      if (img) gsap.fromTo(img, { yPercent: framed ? 4 : -5 }, { yPercent: framed ? -4 : 5, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
     });
     mm.add('(min-width: 901px)', () => {
       cards.forEach((card, i) => {

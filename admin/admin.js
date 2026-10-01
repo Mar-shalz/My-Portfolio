@@ -368,7 +368,7 @@ const PROJECT_CARD = [
   { key: 'hook', label: 'Hook: one line that makes them click', type: 'textarea', wide: true, rows: 2, counter: [60, 140] },
   { key: 'summary', label: 'Summary', type: 'md', wide: true },
   { key: 'cover', label: 'Cover image or video', type: 'media', wide: true },
-  { key: 'coverFit', label: 'Cover display', type: 'select', options: [['', 'Framed: shows the whole image'], ['fill', 'Full-bleed: fills the panel']] },
+  { key: 'coverFit', label: 'Cover display', type: 'select', options: [['', 'Fill the frame (crops edges)'], ['contain', 'Framed: shows the whole image']] },
   { ...stat('Card metrics'), wide: true, help: 'Three numbers work best.' },
   { ...linkList(), wide: true, help: 'The first link opens from a project card; case studies show all of them.' },
 ];
