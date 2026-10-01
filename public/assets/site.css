@@ -251,6 +251,15 @@ h1 em, h2 em, h3 em, h4 em,
 /* ---------- hero ---------- */
 .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--nav-h) + 56px) 0 64px; overflow: hidden; isolation: isolate; text-align: center; }
 .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+/* Dot grid from the previous portfolio, fading out from the top centre */
+.hero-dots {
+  position: absolute; inset: 0; opacity: .55;
+  background-image: radial-gradient(var(--line) 1.1px, transparent 1.1px);
+  background-size: 26px 26px; background-position: center top;
+  mask-image: radial-gradient(ellipse 72% 55% at 50% 26%, #000 0%, #000 42%, transparent 82%);
+  -webkit-mask-image: radial-gradient(ellipse 72% 55% at 50% 26%, #000 0%, #000 42%, transparent 82%);
+}
+@media (max-width: 640px) { .hero-dots { background-size: 22px 22px; } }
 .hero-glow {
   position: absolute; top: 45%; left: 50%; width: 62%; height: 52%; transform: translate(-50%, -50%);
   background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ac) 16%, transparent) 0%, color-mix(in srgb, var(--ink) 5%, transparent) 38%, transparent 70%);

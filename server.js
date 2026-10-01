@@ -21,10 +21,10 @@ const PORT = Number(process.env.PORT) || 3000;
 const onVercel = Boolean(process.env.VERCEL);
 
 // First local run: create .env with a random admin password so the portal is never open.
-if (!process.env.ADMIN_PASSWORD) {
-  if (isProd) {
-    throw new Error('ADMIN_PASSWORD must be set in production. Refusing to start.');
-  }
+// In production without a password the public site still works; the portal stays locked.
+if (!process.env.ADMIN_PASSWORD && isProd) {
+  console.error('ADMIN_PASSWORD is not set. The site is up, but the /admin portal is disabled until you set it.');
+} else if (!process.env.ADMIN_PASSWORD) {
   const password = crypto.randomBytes(12).toString('base64url');
   const secret = crypto.randomBytes(32).toString('hex');
   fs.appendFileSync(envFile, `ADMIN_PASSWORD=${password}\nSESSION_SECRET=${secret}\n`);
@@ -42,9 +42,11 @@ const store = createStore({
   dataDir: path.resolve(ROOT, github ? 'data' : process.env.DATA_DIR || 'data'),
   bundledDir: path.join(ROOT, 'data'),
   github,
+  readOnly: onVercel && !github,
 });
+const portalReady = Boolean(process.env.ADMIN_PASSWORD);
 const auth = createAuth({
-  password: process.env.ADMIN_PASSWORD,
+  password: process.env.ADMIN_PASSWORD || crypto.randomBytes(32).toString('hex'),
   secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
   secure: isProd,
 });
@@ -105,6 +107,7 @@ const requireAuth = (req, res, next) => (auth.isAuthed(req) ? next() : res.statu
 api.get('/session', (req, res) => res.json({ authed: auth.isAuthed(req), mode: store.mode }));
 
 api.post('/login', (req, res) => {
+  if (!portalReady) return res.status(503).json({ error: 'The portal is not set up yet. Add ADMIN_PASSWORD in your hosting settings, then redeploy.' });
   const ip = req.ip || 'unknown';
   if (auth.isLimited(ip)) return res.status(429).json({ error: 'Too many attempts. Try again in 15 minutes.' });
   if (!auth.checkPassword(req.body?.password || '')) {
