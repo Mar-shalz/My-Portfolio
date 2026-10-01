@@ -1229,16 +1229,16 @@
     "title": "What working with me *is like.*",
     "items": [
       {
-        "published": false,
-        "quote": "Replace this with a short, specific quote from a PM, engineer or founder you have worked with. Two or three sentences about a result is ideal.",
-        "name": "Testing 1",
+        "published": true,
+        "quote": "SAMPLE: Victor turned a vague brief into a product our users actually trust. He came to every review with evidence, not opinions. Replace this text in the portal under Testimonials.",
+        "name": "Sample Name",
         "role": "Product Manager, Company",
         "avatar": ""
       },
       {
-        "published": false,
-        "quote": "Replace this with a second quote, ideally from someone in a different role (for example an engineering lead).",
-        "name": "Their name",
+        "published": true,
+        "quote": "SAMPLE: Handoff with Victor was the smoothest I have had. Every state was designed, every component documented. Replace this text in the portal.",
+        "name": "Sample Name",
         "role": "Engineering Lead, Company",
         "avatar": ""
       }

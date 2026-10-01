@@ -358,8 +358,8 @@
         const next = cards[i + 1];
         if (!next) return;
         const st = { trigger: next, start: 'top bottom', end: () => `top ${navH() + 40}px`, scrub: true };
-        gsap.to(card.querySelector('.stack-inner'), { scale: 0.9, ease: 'none', scrollTrigger: st });
-        gsap.to(card.querySelector('.stack-shade'), { opacity: 0.42, ease: 'none', scrollTrigger: { ...st } });
+        // Cards keep full width; the one underneath only dims as the next one covers it.
+        gsap.to(card.querySelector('.stack-shade'), { opacity: 0.35, ease: 'none', scrollTrigger: st });
       });
       return () => cards.forEach((c) => { c.style.top = ''; });
     });

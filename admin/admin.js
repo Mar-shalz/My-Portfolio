@@ -42,7 +42,7 @@ const timeAgo = (iso) => {
 
 /* ============================================================ state & API */
 
-const state = { content: null, rev: 0, dirty: false, saving: false, media: null };
+const state = { content: null, rev: 0, dirty: false, saving: false, media: null, mode: 'local' };
 const openItems = new WeakSet();
 
 async function api(path, { method = 'GET', body, form } = {}) {
@@ -96,7 +96,7 @@ async function save() {
       if (s && s.slug !== p.slug) { p.slug = s.slug; changed = true; }
     }
     state.dirty = false;
-    toast('Published. Your site is updated.');
+    toast(state.mode === 'github' ? 'Published. Your live site updates in about a minute.' : 'Published. Your site is updated.');
     if (changed) route(true);
   } catch (e) {
     toast(e.message, 'error');
@@ -107,10 +107,13 @@ async function save() {
 }
 
 async function preview(path = '/') {
-  const win = window.open('about:blank', '_blank');
+  const win = window.open('', '_blank');
   try {
-    const { token } = await api('/preview', { method: 'POST', body: { content: state.content } });
-    if (win) win.location = `/preview/${token}${path}`;
+    const { html } = await api('/preview', { method: 'POST', body: { content: state.content, path } });
+    if (!win) return toast('Allow pop-ups for this site to see previews.', 'error');
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
   } catch (e) {
     win?.close();
     toast(e.message, 'error');
@@ -915,7 +918,7 @@ async function mediaView() {
     try { await uploadFiles(e.target.files); draw(true); } catch (err) { toast(err.message, 'error'); }
     e.target.value = '';
   } });
-  const drop = h('div.drop', {}, h('strong', {}, 'Drop images, videos or PDFs here'), h('div', { style: 'margin:8px 0' }, 'JPG, PNG, WebP, GIF, AVIF, MP4, WebM or PDF · up to 40 MB each'), h('button.btn.btn-ghost', { type: 'button', onclick: () => input.click() }, 'Browse files'), input);
+  const drop = h('div.drop', {}, h('strong', {}, 'Drop images, videos or PDFs here'), h('div', { style: 'margin:8px 0' }, `JPG, PNG, WebP, GIF, AVIF, MP4, WebM or PDF · up to ${state.mode === 'github' ? 4 : 40} MB each`), h('button.btn.btn-ghost', { type: 'button', onclick: () => input.click() }, 'Browse files'), input);
   drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('is-drop'); });
   drop.addEventListener('dragleave', () => drop.classList.remove('is-drop'));
   drop.addEventListener('drop', async (e) => {
@@ -932,14 +935,14 @@ async function historyView() {
   const box = h('div.panel', {}, h('div.empty', {}, 'Loading…'));
   const list = await api('/backups');
   box.replaceChildren(list.length ? h('div.hist', {}, list.map((b) => h('div.hist-row', {},
-    h('div', {}, h('strong', {}, `Version ${b.rev}`), h('br'), h('span', {}, `Replaced ${timeAgo(b.savedAt)} · ${fmtBytes(b.size)}`)),
+    h('div', {}, h('strong', {}, b.label || `Version ${b.rev}`), h('br'), h('span', {}, `Saved ${timeAgo(b.savedAt)}${b.size ? ` · ${fmtBytes(b.size)}` : ''}`)),
     h('button.btn.btn-ghost.btn-sm', { type: 'button', onclick: async () => {
       const lose = state.dirty ? ' Your unpublished changes will be discarded.' : '';
-      if (!(await confirmBox('Restore this version?', `Your site will go back to version ${b.rev}. The current version is backed up first, so you can undo this.${lose}`, 'Restore', 'btn-primary'))) return;
+      if (!(await confirmBox('Restore this version?', `Your site will go back to “${b.label || `version ${b.rev}`}”. The current version stays in History, so you can undo this.${lose}`, 'Restore', 'btn-primary'))) return;
       try {
         const r = await api(`/backups/${encodeURIComponent(b.name)}/restore`, { method: 'POST' });
         state.content = r.content; state.rev = r.rev; state.dirty = false;
-        updateStatus(); toast(`Restored version ${b.rev}.`); route(true);
+        updateStatus(); toast('Restored.'); route(true);
       } catch (e) { toast(e.message, 'error'); }
     } }, 'Restore')))) : h('div.empty', {}, 'No earlier versions yet. Each publish keeps the previous version here.'));
   return [pageHead('History', 'The last 50 published versions. Restoring is itself undoable.'), box];
@@ -988,6 +991,7 @@ function showLogin() {
 
 async function boot() {
   const s = await api('/session').catch(() => ({ authed: false }));
+  state.mode = s.mode || 'local';
   if (!s.authed) return showLogin();
   if (!state.content) {
     const c = await api('/content');

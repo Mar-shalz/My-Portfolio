@@ -8,6 +8,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createStore, normalize, MEDIA_TYPES } from './lib/store.js';
 import { createAuth } from './lib/auth.js';
+import { createGitHub } from './lib/github.js';
 import { createRenderer } from './lib/render.js';
 import { slugify } from './lib/text.js';
 
@@ -17,12 +18,12 @@ if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
 
 const isProd = process.env.NODE_ENV === 'production';
 const PORT = Number(process.env.PORT) || 3000;
+const onVercel = Boolean(process.env.VERCEL);
 
 // First local run: create .env with a random admin password so the portal is never open.
 if (!process.env.ADMIN_PASSWORD) {
   if (isProd) {
-    console.error('ADMIN_PASSWORD must be set in production. Refusing to start.');
-    process.exit(1);
+    throw new Error('ADMIN_PASSWORD must be set in production. Refusing to start.');
   }
   const password = crypto.randomBytes(12).toString('base64url');
   const secret = crypto.randomBytes(32).toString('hex');
@@ -32,9 +33,15 @@ if (!process.env.ADMIN_PASSWORD) {
   console.log('Created .env with a new admin password. Open .env to see it, and change it any time.');
 }
 
+// With GITHUB_TOKEN + GITHUB_REPO set, the portal saves to the GitHub repo
+// (needed on hosts like Vercel whose disk is read-only).
+const github = process.env.GITHUB_TOKEN && process.env.GITHUB_REPO
+  ? createGitHub({ token: process.env.GITHUB_TOKEN, repo: process.env.GITHUB_REPO, branch: process.env.GITHUB_BRANCH || 'main', api: process.env.GITHUB_API_URL })
+  : null;
 const store = createStore({
-  dataDir: path.resolve(ROOT, process.env.DATA_DIR || 'data'),
+  dataDir: path.resolve(ROOT, github ? 'data' : process.env.DATA_DIR || 'data'),
   bundledDir: path.join(ROOT, 'data'),
+  github,
 });
 const auth = createAuth({
   password: process.env.ADMIN_PASSWORD,
@@ -61,6 +68,12 @@ app.use((req, res, next) => {
 const cache = (age) => (isProd ? { maxAge: age } : { etag: false, lastModified: false, setHeaders: (res) => res.set('Cache-Control', 'no-store') });
 app.use('/assets', express.static(path.join(ROOT, 'public/assets'), cache('7d')));
 app.use('/uploads', express.static(store.uploadsDir, cache('30d')));
+// GitHub mode: a file uploaded a moment ago is not in this deploy yet. Serve it from the repo.
+app.get('/uploads/:name', async (req, res, next) => {
+  const buf = await store.fetchUpload(req.params.name).catch(() => null);
+  if (!buf) return next();
+  res.type(path.extname(req.params.name)).set('Cache-Control', 'public, max-age=300').send(buf);
+});
 const VENDOR = {
   'gsap.min.js': 'node_modules/gsap/dist/gsap.min.js',
   'ScrollTrigger.min.js': 'node_modules/gsap/dist/ScrollTrigger.min.js',
@@ -89,7 +102,7 @@ api.use((req, res, next) => {
 });
 const requireAuth = (req, res, next) => (auth.isAuthed(req) ? next() : res.status(401).json({ error: 'Please sign in again.' }));
 
-api.get('/session', (req, res) => res.json({ authed: auth.isAuthed(req) }));
+api.get('/session', (req, res) => res.json({ authed: auth.isAuthed(req), mode: store.mode }));
 
 api.post('/login', (req, res) => {
   const ip = req.ip || 'unknown';
@@ -107,40 +120,33 @@ api.post('/logout', (req, res) => {
   res.json({ ok: true });
 });
 
-api.get('/content', requireAuth, (req, res) => res.json(store.read()));
+api.get('/content', requireAuth, async (req, res) => res.json(await store.latest()));
 
-api.put('/content', requireAuth, (req, res, next) => {
-  try {
-    const saved = store.save(req.body?.content, req.body?.rev);
-    res.json({ rev: saved._rev, updatedAt: saved.updatedAt, content: saved });
-  } catch (e) {
-    next(e);
-  }
+api.put('/content', requireAuth, async (req, res) => {
+  const saved = await store.save(req.body?.content, req.body?.rev);
+  res.json({ rev: saved._rev, updatedAt: saved.updatedAt, content: saved, mode: store.mode });
 });
 
-// Drafts are rendered from memory so you can preview without publishing.
-const previews = new Map();
+// Preview renders the unsaved draft straight away; nothing is stored.
 api.post('/preview', requireAuth, (req, res) => {
-  const token = crypto.randomBytes(12).toString('base64url');
-  const now = Date.now();
-  for (const [k, v] of previews) if (v.exp < now) previews.delete(k);
-  while (previews.size >= 30) previews.delete(previews.keys().next().value);
-  previews.set(token, { content: req.body?.content, exp: now + 30 * 60 * 1000 });
-  res.json({ token });
+  const ctx = ctxFor(normalize(structuredClone(req.body?.content || {})), '', true);
+  const slug = /^\/work\/([^/?#]+)/.exec(req.body?.path || '')?.[1];
+  let page;
+  if (slug) {
+    const p = ctx.c.projects.find((x) => x.slug === slug && x.kind === 'case-study');
+    page = p ? renderer.caseStudy(ctx, p) : renderer.notFound(ctx);
+  } else if (/^\/about/.test(req.body?.path || '')) page = renderer.about(ctx);
+  else page = renderer.home(ctx);
+  res.json({ html: page });
 });
 
-api.get('/media', requireAuth, (req, res) => res.json(store.listMedia()));
+api.get('/media', requireAuth, async (req, res) => res.json(await store.listMedia()));
 
+// Vercel functions accept request bodies up to 4.5 MB.
+const MAX_UPLOAD = onVercel ? 4 * 1024 * 1024 : 40 * 1024 * 1024;
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: store.uploadsDir,
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname).toLowerCase();
-      const base = slugify(path.basename(file.originalname, ext)) || 'file';
-      cb(null, `${base}-${crypto.randomBytes(3).toString('hex')}${ext === '.jpeg' ? '.jpg' : ext}`);
-    },
-  }),
-  limits: { fileSize: 40 * 1024 * 1024, files: 20 },
+  storage: multer.memoryStorage(),
+  limits: { fileSize: MAX_UPLOAD, files: 20 },
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     const kind = MEDIA_TYPES[ext];
@@ -148,31 +154,32 @@ const upload = multer({
     cb(kind && okMime ? null : Object.assign(new Error(`${file.originalname}: use JPG, PNG, WebP, GIF, AVIF, MP4, WebM or PDF.`), { status: 415 }), Boolean(kind && okMime));
   },
 });
-api.post('/media', requireAuth, upload.array('files', 20), (req, res) => {
-  res.json({ files: (req.files || []).map((f) => ({ name: f.filename, url: `/uploads/${f.filename}` })) });
+api.post('/media', requireAuth, upload.array('files', 20), async (req, res) => {
+  const files = [];
+  for (const f of req.files || []) {
+    const ext = path.extname(f.originalname).toLowerCase();
+    const base = slugify(path.basename(f.originalname, ext)) || 'file';
+    const name = `${base}-${crypto.randomBytes(3).toString('hex')}${ext === '.jpeg' ? '.jpg' : ext}`;
+    await store.saveUpload(name, f.buffer);
+    files.push({ name, url: `/uploads/${name}` });
+  }
+  res.json({ files });
 });
 
-api.delete('/media/:name', requireAuth, (req, res, next) => {
-  try {
-    store.deleteMedia(req.params.name);
-    res.json({ ok: true });
-  } catch (e) {
-    next(e);
-  }
+api.delete('/media/:name', requireAuth, async (req, res) => {
+  await store.deleteMedia(req.params.name);
+  res.json({ ok: true });
 });
 
-api.get('/backups', requireAuth, (req, res) => res.json(store.listBackups()));
-api.post('/backups/:name/restore', requireAuth, (req, res, next) => {
-  try {
-    const saved = store.restore(req.params.name);
-    res.json({ rev: saved._rev, updatedAt: saved.updatedAt, content: saved });
-  } catch (e) {
-    next(e);
-  }
+api.get('/backups', requireAuth, async (req, res) => res.json(await store.listBackups()));
+api.post('/backups/:name/restore', requireAuth, async (req, res) => {
+  const saved = await store.restore(req.params.name);
+  res.json({ rev: saved._rev, updatedAt: saved.updatedAt, content: saved });
 });
 
 api.use((err, req, res, next) => {
   const status = err.status || (err.code === 'LIMIT_FILE_SIZE' ? 413 : 500);
+  if (err.code === 'LIMIT_FILE_SIZE') err.message = `That file is over ${MAX_UPLOAD / 1048576} MB. Compress it and try again.`;
   if (status >= 500) console.error(err);
   res.status(status).json({ error: status >= 500 ? 'Something went wrong on the server.' : err.message });
 });
@@ -197,21 +204,7 @@ const site = express.Router();
 sitePages(site, () => ctxFor(store.read()));
 app.use('/', site);
 
-// /preview/<token>/... renders an unsaved draft for the signed-in owner only.
-const preview = express.Router({ mergeParams: true });
-preview.use((req, res, next) => {
-  const entry = previews.get(req.params.token);
-  if (!auth.isAuthed(req) || !entry || entry.exp < Date.now()) {
-    return res.status(404).type('text').send('This preview has expired. Open it again from the portal.');
-  }
-  res.set('X-Robots-Tag', 'noindex');
-  req.previewContent = entry.content;
-  next();
-});
-sitePages(preview, (req) => ctxFor(normalize(structuredClone(req.previewContent)), `/preview/${req.params.token}`, true));
-app.use('/preview/:token', preview);
-
-app.get('/robots.txt', (req, res) => res.type('text').send('User-agent: *\nDisallow: /admin\nDisallow: /preview\n'));
+app.get('/robots.txt', (req, res) => res.type('text').send('User-agent: *\nDisallow: /admin\n'));
 app.get('/sitemap.xml', (req, res) => {
   const c = store.read();
   const base = String(c.site.siteUrl || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
@@ -221,7 +214,11 @@ app.get('/sitemap.xml', (req, res) => {
 
 app.use((req, res) => html(res, renderer.notFound(ctxFor(store.read())), 404));
 
-app.listen(PORT, () => {
-  console.log(`Portfolio running at http://localhost:${PORT}`);
-  console.log(`CMS portal at       http://localhost:${PORT}/admin`);
-});
+export default app;
+
+if (!onVercel) {
+  app.listen(PORT, () => {
+    console.log(`Portfolio running at http://localhost:${PORT}  (content: ${store.mode})`);
+    console.log(`CMS portal at       http://localhost:${PORT}/admin`);
+  });
+}

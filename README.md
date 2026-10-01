@@ -41,34 +41,40 @@ The portal writes these files for you. Editing `content.json` by hand also works
 - Leave a blank line between paragraphs; start lines with `- ` for a list.
 - In a case study, any block with a **chapter label** appears in the side navigation.
 
-## Deploy
+## Deploy for free (Vercel + GitHub)
 
-### Option A — Node host with a disk (edit from anywhere)
+The site runs on Vercel's free Hobby plan. When you press **Publish** in the
+portal, it saves your content and uploads into this GitHub repo, and Vercel
+redeploys the site automatically (about a minute). Git history doubles as the
+backup, so **History** in the portal can roll back any publish.
 
-Works on Railway, Render (with a disk), Fly.io or any VPS.
+1. Push this project to a GitHub repository (private is fine).
+2. Create a GitHub token the portal can save with:
+   GitHub, then Settings, Developer settings, Personal access tokens,
+   Fine-grained tokens, Generate new token. Repository access: only this repo.
+   Permissions: **Contents: Read and write**. Copy the token.
+3. Go to vercel.com, sign up with GitHub (free), click **Add New, Project**,
+   and import the repository. Leave build settings as they are.
+4. Before deploying, add these Environment Variables:
+   - `ADMIN_PASSWORD` a long password for the portal
+   - `SESSION_SECRET` 64 random hex characters
+     (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+   - `GITHUB_TOKEN` the token from step 2
+   - `GITHUB_REPO` `your-username/your-repo`
+5. Click **Deploy**. Your site is at `https://<project>.vercel.app` and the
+   portal at `https://<project>.vercel.app/admin`.
 
-1. Set environment variables:
-   - `NODE_ENV=production`
-   - `ADMIN_PASSWORD=<a long random password>`
-   - `SESSION_SECRET=<64 random hex characters>`
-   - `DATA_DIR=/data` (a mounted persistent volume)
-2. Start command: `npm start`
+Limits on the free plan: uploads up to 4 MB each (compress images and
+videos first), and the site must be personal, non-commercial use.
 
-On first boot the bundled `data/` folder is copied into `DATA_DIR`. After that,
-everything you publish from `/admin` is saved on the volume.
+## Other hosting options
 
-A `Dockerfile` is included for hosts that build containers.
-
-### Option B — Static hosting (free)
-
-Edit locally in the portal, then:
-
-```bash
-npm run export
-```
-
-Upload the `dist/` folder to Netlify, Vercel, Cloudflare Pages or GitHub Pages.
-The portal itself is not included in the export.
+- **Node host with a disk** (Railway, Render, Fly.io, a VPS): set
+  `NODE_ENV=production`, `ADMIN_PASSWORD`, `SESSION_SECRET` and
+  `DATA_DIR=/data` on a persistent volume, then run `npm start`. A
+  `Dockerfile` and `railway.json` are included. These hosts are not free.
+- **Static only**: run `npm run export` and upload `dist/` anywhere. The
+  portal is not included; edit locally first.
 
 ## Project structure
 
@@ -81,6 +87,8 @@ lib/text.js          Escaping and the small markdown subset
 public/assets/       Site CSS and motion JS
 admin/               The portal (HTML, CSS, JS — no build step)
 scripts/export.js    Static export to dist/
+api/index.js         Vercel entry point (wraps server.js)
+lib/github.js        Saves content to GitHub when hosted on Vercel
 data/                Content, uploads and backups
 legacy/              The previous single-file portfolio, kept for reference
 ```
