@@ -184,7 +184,7 @@ api.use((err, req, res, next) => {
   const status = err.status || (err.code === 'LIMIT_FILE_SIZE' ? 413 : 500);
   if (err.code === 'LIMIT_FILE_SIZE') err.message = `That file is over ${MAX_UPLOAD / 1048576} MB. Compress it and try again.`;
   if (status >= 500) console.error(err);
-  res.status(status).json({ error: status >= 500 ? 'Something went wrong on the server.' : err.message });
+  res.status(status).json({ error: status >= 500 && !err.expose ? `Something went wrong on the server: ${err.message}` : err.message });
 });
 app.use('/api', api);
 
