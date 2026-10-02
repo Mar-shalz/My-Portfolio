@@ -138,10 +138,29 @@
   const isIntro = html.classList.contains('intro');
   if (curtain) gsap.set(curtain, { y: 0, yPercent: entering ? 0 : 100 });
 
-  function leave(href) {
+  // Back buttons return to the exact spot the visitor left: every page change
+  // remembers where you were, and a Back button pops that memory.
+  const trail = {
+    read() { try { return JSON.parse(sessionStorage.getItem('trail') || '[]'); } catch { return []; } },
+    write(list) { try { sessionStorage.setItem('trail', JSON.stringify(list.slice(-12))); } catch {} },
+    push() { this.write([...this.read(), { path: location.pathname + location.search, y: Math.round(scrollY) }]); },
+    pop() {
+      const list = this.read();
+      let entry;
+      while ((entry = list.pop()) && entry.path === location.pathname + location.search);
+      this.write(list);
+      return entry;
+    },
+  };
+
+  function leave(href, { back = false } = {}) {
+    if (!back) trail.push();
     try { sessionStorage.setItem('pt', '1'); } catch {}
     if (!curtain) return void (location.href = href);
-    gsap.timeline({ onComplete: () => { location.href = href; } })
+    let gone = false;
+    const go = () => { if (!gone) { gone = true; location.href = href; } };
+    setTimeout(go, 1100); // never wait on the animation if the tab is throttled
+    gsap.timeline({ onComplete: go })
       .set(curtain, { yPercent: 100 })
       .set([count, cname], { opacity: 0 })
       .to(curtain, { yPercent: 0, duration: 0.7, ease: 'expo.inOut' })
@@ -176,6 +195,13 @@
     }
     if (/^\/(admin|api|uploads)\b/.test(url.pathname)) return;
     e.preventDefault();
+    if (a.classList.contains('back')) {
+      const entry = trail.pop();
+      if (entry) {
+        try { sessionStorage.setItem('restoreY', String(entry.y)); } catch {}
+        return leave(new URL(entry.path, location.href).href, { back: true });
+      }
+    }
     leave(url.href);
   });
 
@@ -450,7 +476,15 @@
       return;
     }
     ScrollTrigger.refresh();
-    if (location.hash) {
+    let restoreY = null;
+    try { restoreY = sessionStorage.getItem('restoreY'); sessionStorage.removeItem('restoreY'); } catch {}
+    if (restoreY != null && !Number.isNaN(Number(restoreY))) {
+      setTimeout(() => {
+        if (lenis) lenis.scrollTo(Number(restoreY), { immediate: true, force: true });
+        else scrollTo(0, Number(restoreY));
+        ScrollTrigger.update();
+      }, 0);
+    } else if (location.hash) {
       const target = d.getElementById(decodeURIComponent(location.hash.slice(1)));
       if (target) requestAnimationFrame(() => scrollToEl(target, true));
     }
