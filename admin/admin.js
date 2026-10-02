@@ -379,6 +379,7 @@ const PROJECT_CARD = [
 
 const PROJECT_DETAILS = [
   { key: 'heroImage', label: 'Hero image', type: 'media', wide: true, help: 'Falls back to the cover image.' },
+  { key: 'tools', label: 'Tools used on this project', type: 'tags', wide: true, help: 'Shown under the facts row. Keep it to the 3–5 tools that mattered here.' },
   { key: 'meta', label: 'Facts row', type: 'list', inline: true, wide: true, addLabel: 'Add fact', make: () => ({ label: '', value: '' }), fields: [{ key: 'label', label: 'Label', type: 'text', placeholder: 'Role' }, { key: 'value', label: 'Value', type: 'text' }], help: 'Role, team, timeline, platform, scope.' },
   { type: 'section', title: 'At a glance', help: 'Recruiters skim this first. One or two sentences each.' },
   { key: 'glance', type: 'group', fields: [
