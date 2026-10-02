@@ -255,6 +255,10 @@ const ABOUT = [
       { key: 'period', label: 'Period', type: 'text', placeholder: 'Jul 2022 to Present' }, { key: 'location', label: 'Location', type: 'text' },
     ] },
     { key: 'capabilities', label: 'Capabilities', type: 'tags', wide: true },
+    { key: 'tools', label: 'Toolkit (About page)', type: 'list', wide: true, addLabel: 'Add group', make: () => ({ group: '', items: [] }), itemLabel: (x) => [x.group, (x.items || []).join(', ')].filter(Boolean).join(': '), help: 'Group tools by what you do with them. Leave out tools every designer has, unless the group explains how you use them.', fields: [
+      { key: 'group', label: 'Group name', type: 'text', wide: true, placeholder: 'Prototyping in code' },
+      { key: 'items', label: 'Tools', type: 'tags', wide: true },
+    ] },
     { key: 'domains', label: 'Domains', type: 'tags', wide: true },
   ] },
 ];

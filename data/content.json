@@ -1,5 +1,5 @@
 {
-  "_rev": 13,
+  "_rev": 14,
   "updatedAt": "2026-10-01T15:34:05.276Z",
   "site": {
     "name": "Victor Ajibodu",
@@ -1312,7 +1312,6 @@
       "Design systems",
       "Prototyping",
       "A/B testing",
-      "Figma",
       "Mobile-first",
       "Information architecture",
       "Usability testing",
@@ -1320,6 +1319,28 @@
       "Compliance UX (CBN)",
       "Design tokens",
       "Dev handoff"
+    ],
+    "tools": [
+      {
+        "group": "Design",
+        "items": [
+          "Figma",
+          "Adobe Photoshop"
+        ]
+      },
+      {
+        "group": "Research & workshops",
+        "items": [
+          "Miro"
+        ]
+      },
+      {
+        "group": "Prototyping in code",
+        "items": [
+          "HTML & CSS",
+          "Claude Code"
+        ]
+      }
     ],
     "domains": [
       "Fintech",
