@@ -381,6 +381,16 @@ h1 em, h2 em, h3 em, h4 em,
 .other-card:hover { border-color: color-mix(in oklab, var(--pc) 45%, var(--line)); box-shadow: var(--shadow); }
 .other-glow { position: absolute; inset: -30% -30% auto auto; width: 70%; aspect-ratio: 1; border-radius: 50%; z-index: -1; background: radial-gradient(circle, color-mix(in srgb, var(--pc) 26%, transparent), transparent 65%); filter: blur(20px); transition: transform 1s var(--ease); }
 .other-card:hover .other-glow { transform: translate(-10%, 10%) scale(1.15); }
+.other-art {
+  margin: -8px -8px .5rem; border-radius: calc(var(--r) - 8px); aspect-ratio: 16 / 9; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; padding: 18px 20px;
+  background:
+    radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--pc) 55%, transparent), transparent 55%),
+    radial-gradient(var(--line) 1px, transparent 1px) 0 0 / 18px 18px,
+    color-mix(in oklab, var(--pc) 14%, var(--bg-2));
+}
+.other-art span { font-size: clamp(2.6rem, 5vw, 3.6rem); font-weight: 700; letter-spacing: -.05em; line-height: 1; color: var(--pc-text); }
+.other-art i { font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); align-self: flex-end; }
 .other-img { margin: -8px -8px .5rem; border-radius: calc(var(--r) - 8px); overflow: hidden; aspect-ratio: 16 / 10; }
 .other-img img { width: 100%; height: 100%; object-fit: cover; }
 .other-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
@@ -453,6 +463,10 @@ h1 em, h2 em, h3 em, h4 em,
 .tq { border: 1px solid var(--line); border-radius: var(--r); padding: 2rem; background: var(--surface); display: flex; flex-direction: column; gap: 1.5rem; }
 .tq blockquote { font-size: 19px; line-height: 1.5; letter-spacing: -.01em; }
 .tq-mark { font-size: 64px; line-height: .6; height: 26px; color: var(--ac); font-weight: 700; }
+.tq-link { display: block; margin-top: 4px; font-size: 12.5px; color: var(--ac); }
+.kpi-note { margin-top: 12px; font-size: 13.5px; color: var(--ink-2); line-height: 1.55; }
+.kpi-note span { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 2px; }
+.tz-note { display: block; font-size: 12.5px; color: color-mix(in srgb, var(--bg) 60%, transparent); margin-top: 2px; }
 .tq-ask { border-style: dashed; background: transparent; justify-content: center; align-items: flex-start; }
 .tq-ask h3 { font-size: 22px; letter-spacing: -.02em; }
 .tq-ask p { color: var(--ink-2); }

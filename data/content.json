@@ -1,5 +1,5 @@
 {
-  "_rev": 15,
+  "_rev": 16,
   "updatedAt": "2026-10-01T15:34:05.276Z",
   "site": {
     "name": "Victor Ajibodu",
@@ -15,7 +15,7 @@
     "defaultTheme": "dark",
     "availability": {
       "open": true,
-      "label": "Available for new roles & projects"
+      "label": "Available for remote product design roles"
     },
     "email": "ajiboduvictor@gmail.com",
     "phone": "+234 813 593 5097",
@@ -31,7 +31,10 @@
         "url": "https://behance.net/victorajibodu"
       }
     ],
-    "footerNote": "Designed & built in Lagos."
+    "footerNote": "Designed & built in Lagos.",
+    "bookingUrl": "",
+    "bookingLabel": "Book a 20-min call",
+    "timezoneNote": "UTC+1: full overlap with Europe, mornings with US East"
   },
   "hero": {
     "eyebrow": "Lead Product Designer · Lagos",
@@ -39,7 +42,7 @@
       "Design that earns *trust.*",
       "Numbers that *prove it.*"
     ],
-    "intro": "I'm **Victor Ajibodu**. I lead design at a **CBN-licensed fintech**, building products for real constraints: mobile-first, low-bandwidth, low-trust, high-stakes. Then I ship the numbers that show it worked.",
+    "intro": "I'm **Victor Ajibodu**, Lead Product Designer at a **CBN-licensed fintech** in Lagos. I design trust-critical products (onboarding, KYC, lending and payments) for mobile-first users on low bandwidth. Then I ship the numbers that show it worked.",
     "primaryCta": "See the work",
     "secondaryCta": "Let's talk",
     "metrics": [
@@ -101,7 +104,7 @@
       ],
       "accent": "#029247",
       "hook": "How a branch-only lender reached 10,000 mobile users, by letting trust come before paperwork.",
-      "summary": "Nigeria's first unified finance app: savings, loans, investments and transfers in one CBN-licensed product. I led design end-to-end: 250+ alpha sessions, a progressive-KYC model that overturned the original PRD, a 60+ component design system, and a launch that onboarded 10,000 users.",
+      "summary": "Nigeria's first unified finance app: savings, loans, investments and transfers in one CBN-licensed product. I led design end-to-end, working with a second product designer, a PM, five engineers and two QA: 250+ alpha sessions, a progressive-KYC model that overturned the original PRD, a 60+ component design system, and a launch that onboarded 10,000 users.",
       "cover": "/uploads/fc-app-cover.jpg",
       "heroImage": "/uploads/fc-app-cover.jpg",
       "stats": [
@@ -122,6 +125,10 @@
         {
           "label": "Role",
           "value": "Lead Product Designer"
+        },
+        {
+          "label": "Team",
+          "value": "Me (lead designer), 1 product designer, 1 PM, 5 engineers, 2 QA"
         },
         {
           "label": "Timeline",
@@ -1024,9 +1031,116 @@
         }
       ],
       "links": [],
-      "meta": [],
-      "blocks": [],
-      "glance": {}
+      "meta": [
+        {
+          "label": "Role",
+          "value": ""
+        },
+        {
+          "label": "Team",
+          "value": ""
+        },
+        {
+          "label": "Platform",
+          "value": "Web · Multi-role dashboard"
+        },
+        {
+          "label": "Scope",
+          "value": ""
+        }
+      ],
+      "blocks": [
+        {
+          "type": "kpis",
+          "eyebrow": "Impact",
+          "heading": "",
+          "body": "",
+          "items": [
+            {
+              "value": "300+",
+              "label": "Screens designed"
+            },
+            {
+              "value": "260+",
+              "label": "Hours of work"
+            },
+            {
+              "value": "",
+              "label": ""
+            }
+          ],
+          "note": ""
+        },
+        {
+          "type": "text",
+          "eyebrow": "The brief",
+          "heading": "Election day leaves *no room for error.*",
+          "body": "WRITE: who the client is, what civic organisations needed to monitor, and why existing tools failed on election day."
+        },
+        {
+          "type": "text",
+          "eyebrow": "The users",
+          "heading": "Every role sees a *different election.*",
+          "body": "WRITE: the roles (for example field observers, coordinators, analysts), what each one needs in the moment, and the conditions they work in (network, devices, pressure)."
+        },
+        {
+          "type": "image",
+          "eyebrow": "Information architecture",
+          "heading": "One platform, *many permissions.*",
+          "body": "WRITE: how you structured roles, permissions and navigation so each user only sees what they need.",
+          "src": "",
+          "caption": "Role map / sitemap",
+          "wide": true
+        },
+        {
+          "type": "callout",
+          "eyebrow": "The turning point",
+          "heading": "The decision that *made it work.*",
+          "body": "WRITE: the hardest trade-off (for example speed of reporting vs. accuracy) and how you resolved it with the team.",
+          "label": "Design principle",
+          "text": ""
+        },
+        {
+          "type": "gallery",
+          "eyebrow": "The product",
+          "heading": "Built for accuracy *under pressure.*",
+          "body": "WRITE: the key flows you designed: submitting a report, verifying it, watching results live.",
+          "images": []
+        },
+        {
+          "type": "text",
+          "eyebrow": "Outcome",
+          "heading": "Where it *stands now.*",
+          "body": "WRITE: beta status, who is testing it, and the first signals you have (feedback, usage, numbers)."
+        },
+        {
+          "type": "cards",
+          "eyebrow": "Reflection",
+          "heading": "What this project *taught me.*",
+          "body": "",
+          "style": "learning",
+          "columns": 3,
+          "items": [
+            {
+              "label": "",
+              "body": ""
+            },
+            {
+              "label": "",
+              "body": ""
+            },
+            {
+              "label": "",
+              "body": ""
+            }
+          ]
+        }
+      ],
+      "glance": {
+        "problem": "",
+        "solution": "",
+        "impact": ""
+      }
     },
     {
       "id": "walk-the-aisle",
@@ -1107,7 +1221,7 @@
       "slug": "chopbaze",
       "published": true,
       "kind": "card",
-      "title": "Chopbaze *Marketplace.*",
+      "title": "Chopbaze.",
       "category": "Foodtech · Marketplace",
       "status": "Co-founder · In testing",
       "year": "",
@@ -1126,8 +1240,8 @@
           "label": "Marketplace"
         },
         {
-          "value": "Founder",
-          "label": "Own the product"
+          "value": "Co-founder",
+          "label": "Own both surfaces"
         },
         {
           "value": "Testing",
@@ -1243,7 +1357,10 @@
         "avatar": ""
       }
     ],
-    "show": true
+    "show": true,
+    "requestTitle": "Worked with me?",
+    "requestText": "I'd love to hear how it went. A few honest words about working together help me more than anything on this page.",
+    "requestCta": "Share a testimonial"
   },
   "about": {
     "eyebrow": "Chapter 03 · The person",

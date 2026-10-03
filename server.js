@@ -51,7 +51,7 @@ const auth = createAuth({
   secure: isProd,
 });
 const assetVersion = Date.now().toString(36);
-const renderer = createRenderer({ sizeOf: store.sizeOf, assetVersion });
+const renderer = createRenderer({ sizeOf: store.sizeOf, assetVersion, analytics: onVercel });
 
 const app = express();
 app.disable('x-powered-by');

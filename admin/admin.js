@@ -189,6 +189,9 @@ const SITE = [{ key: 'site', type: 'group', fields: [
   { key: 'email', label: 'Email', type: 'email' },
   { key: 'phone', label: 'Phone', type: 'text' },
   { key: 'showPhone', label: 'Show phone number on the site', type: 'toggle' },
+  { key: 'bookingUrl', label: 'Booking link', type: 'url', placeholder: 'https://calendly.com/your-name/20min', help: 'Free Calendly or Cal.com link. Adds a “Book a 20-min call” button to the contact section.' },
+  { key: 'bookingLabel', label: 'Booking button text', type: 'text', placeholder: 'Book a 20-min call' },
+  { key: 'timezoneNote', label: 'Time-zone note', type: 'text', wide: true, help: 'Shown under your local time. Tells remote employers how your hours overlap.' },
   { key: 'resumeUrl', label: 'Résumé / CV', type: 'media', accept: 'application/pdf', kinds: ['document'], help: 'Upload a PDF. Visitors get “Download résumé” buttons in the hero, nav, contact section, About page and footer. Remove it to hide the buttons.' },
   linkList('socials', 'Social links'),
   { type: 'section', title: 'Look & feel' },
@@ -303,6 +306,7 @@ const TESTIMONIALS = [
       { key: 'quote', label: 'Quote', type: 'textarea', wide: true },
       { key: 'name', label: 'Name', type: 'text' },
       { key: 'role', label: 'Role & company', type: 'text' },
+      { key: 'link', label: 'Source link (optional)', type: 'url', wide: true, placeholder: 'https://linkedin.com/in/…/details/recommendations', help: 'Link to the LinkedIn recommendation so recruiters can verify it.' },
       { key: 'avatar', label: 'Photo', type: 'media', wide: true },
     ] },
   ] },
@@ -326,6 +330,7 @@ const BLOCKS = {
   ] },
   kpis: { label: 'Metrics', desc: 'Big animated numbers', fields: [
     { key: 'items', label: 'Metrics', type: 'list', inline: true, wide: true, addLabel: 'Add metric', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text' }, { key: 'label', label: 'Label', type: 'text' }] },
+    { key: 'note', label: 'How this was measured', type: 'md', wide: true, help: 'One line: the tool, the baseline and the time window. Example: “Google Analytics, 3 months before vs. 3 months after launch.” Interviewers will ask.' },
   ] },
   cards: { label: 'Cards', desc: 'Problems, solutions, A/B tests, learnings', fields: [
     { key: 'style', label: 'Style', type: 'select', options: [['neutral', 'Neutral'], ['problem', 'Problems (red)'], ['solution', 'Solutions (project colour)'], ['learning', 'Learnings (outlined)']] },
@@ -728,6 +733,7 @@ function healthChecks(c) {
     [Boolean(c.about.portrait), 'Add a portrait photo', 'People hire people. A real photo on the About section builds trust instantly.', '#/about'],
     [(c.testimonials.items || []).filter((t) => t.quote && t.published !== false).length >= 2, 'Add 2–3 testimonials', 'A PM or engineer vouching for you is the strongest proof on a portfolio.', '#/testimonials'],
     [Boolean(c.site.resumeUrl), 'Upload your résumé (PDF)', 'Recruiters look for it within the first minute.', '#/site'],
+    [Boolean(c.site.bookingUrl), 'Add a booking link', 'A free Calendly link turns “maybe later” into a call this week.', '#/site'],
     [Boolean(c.site.siteUrl), 'Set your live site address', 'Enables share-image previews on LinkedIn and Slack.', '#/site'],
     [(c.site.seoDescription || '').length >= 100, 'Write a search description', 'Shown on Google and link previews.', '#/site'],
     [studies.length >= 3, 'Publish at least 3 case studies', 'Three strong stories beat eight thin ones.', '#/projects'],
@@ -739,6 +745,9 @@ function healthChecks(c) {
     if ((p.stats || []).length < 3) missing.push('3 metrics');
     if (!(g.problem && g.solution && g.impact)) missing.push('at-a-glance');
     if (!(p.meta || []).length) missing.push('facts row');
+    if (!(p.meta || []).some((m) => /team/i.test(m.label || ''))) missing.push('team in facts row');
+    if ((p.blocks || []).some((b) => b.type === 'kpis') && !(p.blocks || []).some((b) => b.type === 'kpis' && b.note)) missing.push('how metrics were measured');
+    if (!(p.blocks || []).some((b) => ['image', 'embed'].includes(b.type) && /\.(mp4|webm)|figma|youtu|vimeo|loom/i.test(`${b.src || ''} ${b.url || ''}`))) missing.push('prototype video or embed');
     if (!(p.blocks || []).some((b) => /reflect|learn/i.test(`${b.eyebrow} ${b.heading}`))) missing.push('reflection');
     checks.push([!missing.length, `${plain(p.title)} is story-complete`, missing.length ? `Missing: ${missing.join(', ')}.` : 'Cover, metrics, glance, facts and reflection all in place.', `#/projects/${p.id}`]);
   }
