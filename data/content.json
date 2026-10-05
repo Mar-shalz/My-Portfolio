@@ -1,6 +1,6 @@
 {
-  "_rev": 17,
-  "updatedAt": "2026-10-05T12:55:31.326Z",
+  "_rev": 18,
+  "updatedAt": "2026-10-05T13:53:44.401Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1354,7 +1354,7 @@
         "published": true,
         "quote": "Victor brings a strong product mindset to design. He creates thoughtful, polished experiences and collaborates closely with developers to make sure the final product stays true to the vision while remaining practical to build.",
         "name": "Adefope Oluwatosin",
-        "role": "Frontend Engineer, Fast Credit Limited",
+        "role": "Frontend Engineer",
         "avatar": ""
       },
       {
