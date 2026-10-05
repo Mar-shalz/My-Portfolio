@@ -1,6 +1,6 @@
 {
-  "_rev": 16,
-  "updatedAt": "2026-10-01T15:34:05.276Z",
+  "_rev": 17,
+  "updatedAt": "2026-10-05T12:55:31.326Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -439,7 +439,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tools": []
     },
     {
       "id": "fast-credit-website",
@@ -626,7 +627,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tools": []
     },
     {
       "id": "evamor-store",
@@ -809,7 +811,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tools": []
     },
     {
       "id": "cedaa-yoghurt",
@@ -996,7 +999,8 @@
             }
           ]
         }
-      ]
+      ],
+      "tools": []
     },
     {
       "id": "altirev",
@@ -1140,7 +1144,8 @@
         "problem": "",
         "solution": "",
         "impact": ""
-      }
+      },
+      "tools": []
     },
     {
       "id": "walk-the-aisle",
@@ -1177,7 +1182,8 @@
       "links": [],
       "meta": [],
       "blocks": [],
-      "glance": {}
+      "glance": {},
+      "tools": []
     },
     {
       "id": "fast-credit-internet-banking",
@@ -1214,7 +1220,8 @@
       "links": [],
       "meta": [],
       "blocks": [],
-      "glance": {}
+      "glance": {},
+      "tools": []
     },
     {
       "id": "chopbaze",
@@ -1251,7 +1258,8 @@
       "links": [],
       "meta": [],
       "blocks": [],
-      "glance": {}
+      "glance": {},
+      "tools": []
     }
   ],
   "process": {
@@ -1343,10 +1351,10 @@
     "title": "What working with me *is like.*",
     "items": [
       {
-        "published": false,
-        "quote": "SAMPLE: Victor turned a vague brief into a product our users actually trust. He came to every review with evidence, not opinions. Replace this text in the portal under Testimonials.",
-        "name": "Sample Name",
-        "role": "Product Manager, Company",
+        "published": true,
+        "quote": "Victor brings a strong product mindset to design. He creates thoughtful, polished experiences and collaborates closely with developers to make sure the final product stays true to the vision while remaining practical to build.",
+        "name": "Adefope Oluwatosin",
+        "role": "Frontend Engineer, Fast Credit Limited",
         "avatar": ""
       },
       {
@@ -1359,7 +1367,7 @@
     ],
     "show": true,
     "requestTitle": "Worked with me?",
-    "requestText": "I'd love to hear how it went. A few honest words about working together help me more than anything on this page.",
+    "requestText": "I'd love to hear how it went . A few honest words about working together help me more than anything on this page.",
     "requestCta": "Share a testimonial"
   },
   "about": {
