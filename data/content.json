@@ -1,6 +1,6 @@
 {
-  "_rev": 21,
-  "updatedAt": "2026-11-06T06:22:58.184Z",
+  "_rev": 22,
+  "updatedAt": "2026-11-06T06:23:45.000Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1607,7 +1607,7 @@
     ],
     "show": true,
     "requestTitle": "Worked with me?",
-    "requestText": "I'd love to hear how it went. A few honest words about working together help me more than anything on this page. ",
+    "requestText": "I'd love to hear how it went. A few honest words about working together help me more than anything on this page.",
     "requestCta": "Share a testimonial",
     "showRequestCard": true,
     "autoplay": true
