@@ -42,7 +42,7 @@ const timeAgo = (iso) => {
 
 /* ============================================================ state & API */
 
-const state = { content: null, rev: 0, dirty: false, saving: false, media: null, mode: 'local' };
+const state = { content: null, rev: 0, dirty: false, editVersion: 0, saving: false, media: null, mode: 'local' };
 const openItems = new WeakSet();
 
 async function api(path, { method = 'GET', body, form } = {}) {
@@ -69,6 +69,7 @@ function toast(msg, type = '') {
 }
 
 function markDirty() {
+  state.editVersion += 1;
   state.dirty = true;
   updateStatus();
 }
@@ -81,25 +82,31 @@ function updateStatus() {
 }
 
 async function save() {
-  if (state.saving || !state.dirty) return;
+  if (state.saving || !state.dirty || !state.content) return;
+  const draft = state.content;
+  const editVersion = state.editVersion;
+  const snapshot = clone(draft);
   state.saving = true;
   updateStatus();
   try {
-    const r = await api('/content', { method: 'PUT', body: { content: state.content, rev: state.rev } });
+    const r = await api('/content', { method: 'PUT', body: { content: snapshot, rev: state.rev } });
+    if (state.content !== draft) return;
     // Keep the local draft (so open panels stay open); only adopt what the server normalised.
     state.rev = r.rev;
-    state.content._rev = r.rev;
-    state.content.updatedAt = r.updatedAt;
+    draft._rev = r.rev;
+    draft.updatedAt = r.updatedAt;
     let changed = false;
-    for (const p of state.content.projects) {
+    for (const p of draft.projects) {
+      const sent = snapshot.projects.find((x) => x.id === p.id);
       const s = r.content.projects.find((x) => x.id === p.id);
-      if (s && s.slug !== p.slug) { p.slug = s.slug; changed = true; }
+      if (sent && s && p.slug === sent.slug && s.slug !== p.slug) { p.slug = s.slug; changed = true; }
     }
-    state.dirty = false;
-    toast(state.mode === 'github' ? 'Published. Your live site updates in about a minute.' : 'Published. Your site is updated.');
-    if (changed) route(true);
+    state.dirty = state.editVersion !== editVersion;
+    toast(state.dirty ? 'Published the earlier version. Your newer edits are still unpublished.' : state.mode === 'github' ? 'Published. Your live site updates in about a minute.' : 'Published. Your site is updated.');
+    // Rebuilding the form while someone types would interrupt their newer edits.
+    if (changed && !state.dirty) route(true);
   } catch (e) {
-    toast(e.message, 'error');
+    if (state.content === draft) toast(e.message, 'error');
   } finally {
     state.saving = false;
     updateStatus();
@@ -167,10 +174,10 @@ const confirmBox = (title, text, label = 'Delete', kind = 'btn-danger') =>
 
 /* ============================================================ schemas */
 
-const MD_HELP = h('span', {}, 'Formatting: ', h('code', {}, '**bold**'), ' ', h('code', {}, '*orange accent*'), ' ', h('code', {}, '[link](https://…)'), ' · blank line = new paragraph · ', h('code', {}, '- '), ' starts a list');
-const ACCENT_HELP = h('span', {}, 'Wrap words in ', h('code', {}, '*asterisks*'), ' to set them in the orange serif italic.');
+const MD_HELP = h('span', {}, 'Formatting: ', h('code', {}, '**bold**'), ' ', h('code', {}, '*emphasis*'), ' ', h('code', {}, '[link](https://…)'), ' · blank line = new paragraph · ', h('code', {}, '- '), ' starts a list');
+const ACCENT_HELP = h('span', {}, 'Wrap words in ', h('code', {}, '*asterisks*'), ' to emphasize them in the site accent colour.');
 
-const stat = (label = 'Metrics') => ({ key: 'stats', label, type: 'list', inline: true, addLabel: 'Add metric', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text', placeholder: '35%' }, { key: 'label', label: 'Label', type: 'text', placeholder: 'Conversion lift' }] });
+const stat = (label = 'Metrics') => ({ key: 'stats', label, type: 'list', inline: true, addLabel: 'Add metric', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text', placeholder: 'Verified figure' }, { key: 'label', label: 'Label', type: 'text', placeholder: 'What the figure measures' }] });
 const linkList = (key = 'links', label = 'Links') => ({ key, label, type: 'list', inline: true, addLabel: 'Add link', make: () => ({ label: '', url: '' }), fields: [{ key: 'label', label: 'Label', type: 'text', placeholder: 'Visit live site' }, { key: 'url', label: 'URL', type: 'url', placeholder: 'https://' }] });
 
 const SITE = [{ key: 'site', type: 'group', fields: [
@@ -180,7 +187,7 @@ const SITE = [{ key: 'site', type: 'group', fields: [
   { key: 'initial', label: 'Monogram', type: 'text', help: 'One letter for the logo mark and page transitions.' },
   { key: 'location', label: 'Location', type: 'text' },
   { key: 'timezone', label: 'Time zone', type: 'text', help: 'e.g. Africa/Lagos. Powers the live clock in the contact section.' },
-  { type: 'section', title: 'Availability', help: 'The green pill in the hero and nav.' },
+  { type: 'section', title: 'Availability', help: 'Shown in the homepage introduction and footer.' },
   { key: 'availability', type: 'group', fields: [
     { key: 'open', label: 'Open to work', type: 'toggle' },
     { key: 'label', label: 'Availability text', type: 'text' },
@@ -192,10 +199,10 @@ const SITE = [{ key: 'site', type: 'group', fields: [
   { key: 'bookingUrl', label: 'Booking link', type: 'url', placeholder: 'https://calendly.com/your-name/20min', help: 'Free Calendly or Cal.com link. Adds a “Book a 20-min call” button to the contact section.' },
   { key: 'bookingLabel', label: 'Booking button text', type: 'text', placeholder: 'Book a 20-min call' },
   { key: 'timezoneNote', label: 'Time-zone note', type: 'text', wide: true, help: 'Shown under your local time. Tells remote employers how your hours overlap.' },
-  { key: 'resumeUrl', label: 'Résumé / CV', type: 'media', accept: 'application/pdf', kinds: ['document'], help: 'Upload a PDF. Visitors get “Download résumé” buttons in the hero, nav, contact section, About page and footer. Remove it to hide the buttons.' },
+  { key: 'resumeUrl', label: 'Résumé / CV', type: 'media', allowLink: true, accept: 'application/pdf', kinds: ['document'], help: 'Keep a public Google Drive folder link to add or replace CVs without changing this setting. You can also link to a Drive file or upload a PDF. Résumé links open in an overlay.' },
   linkList('socials', 'Social links'),
   { type: 'section', title: 'Look & feel' },
-  { key: 'accent', label: 'Accent colour', type: 'color' },
+  { key: 'accent', label: 'Accent colour', type: 'color', help: 'Adjusted automatically for readable text in each theme.' },
   { key: 'defaultTheme', label: 'Default theme', type: 'select', options: [['system', 'Follow visitor’s system'], ['dark', 'Dark'], ['light', 'Light']] },
   { key: 'footerNote', label: 'Footer note', type: 'text' },
   { type: 'section', title: 'Search & sharing', help: 'How your site appears on Google, LinkedIn, Slack and X.' },
@@ -208,34 +215,40 @@ const SITE = [{ key: 'site', type: 'group', fields: [
 const HOME = [
   { type: 'section', title: 'Hero', help: 'The first thing a hiring manager reads. Keep it to two short lines.' },
   { key: 'hero', type: 'group', fields: [
+    { key: 'eyebrow', label: 'Intro label', type: 'text' },
     { key: 'primaryCta', label: 'Primary button', type: 'text' },
-    { key: 'resumeCta', label: 'Résumé button', type: 'text', help: 'Shows only after you upload a résumé in Site settings.' },
+    { key: 'resumeCta', label: 'About résumé link text', type: 'text', help: 'Labels the résumé link in the About section when a résumé link or PDF is added in Site settings.' },
     { key: 'lines', label: 'Headline lines', type: 'strings', wide: true, addLabel: 'Add line', help: ACCENT_HELP },
     { key: 'intro', label: 'Intro paragraph', type: 'md', wide: true },
-    { key: 'secondaryCta', label: 'Secondary button', type: 'text' },
+    { key: 'secondaryCta', label: 'About link text', type: 'text', help: 'Links to the homepage About section.' },
+    { key: 'proofNote', label: 'Metric context and source', type: 'textarea', wide: true, help: 'Shown directly beside the homepage metrics. Include source, date and what the numbers actually measure.' },
     { key: 'metrics', label: 'Headline metrics', type: 'list', inline: true, wide: true, addLabel: 'Add metric', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text' }, { key: 'label', label: 'Label', type: 'text' }] },
   ] },
-  { type: 'section', title: 'Prologue', help: 'The paragraph whose words light up as visitors scroll.' },
+  { type: 'section', title: 'Archived prologue', help: 'Retained content from the previous design; not displayed on the current homepage.' },
   { key: 'manifesto', type: 'group', fields: [
     { key: 'eyebrow', label: 'Label', type: 'text' },
     { key: 'text', label: 'Text', type: 'textarea', wide: true, rows: 4 },
   ] },
-  { type: 'section', title: 'Moving strip' },
+  { type: 'section', title: 'Archived moving strip', help: 'Retained for future use; not displayed on the current homepage.' },
   { key: 'marquee', label: 'Words in the scrolling strip', type: 'tags', wide: true },
   { type: 'section', title: 'Work section' },
   { key: 'work', type: 'group', fields: [
     { key: 'eyebrow', label: 'Label', type: 'text' },
-    { key: 'title', label: 'Headline', type: 'text', help: ACCENT_HELP },
+    { key: 'title', label: 'Headline', type: 'textarea', rows: 2, help: ACCENT_HELP },
     { key: 'intro', label: 'Intro', type: 'textarea', wide: true },
+    { key: 'projectCta', label: 'Case-study image link text', type: 'text', help: 'Default text inside featured project images that open a case study.' },
+    { key: 'moreWorkCta', label: 'More work navigation link', type: 'text' },
     { key: 'otherEyebrow', label: 'More work: label', type: 'text' },
-    { key: 'otherTitle', label: 'More work: headline', type: 'text' },
+    { key: 'otherTitle', label: 'More work: headline', type: 'textarea', rows: 2 },
     { key: 'otherIntro', label: 'More work: intro', type: 'textarea', wide: true },
+    { key: 'explorationsTitle', label: 'Other products: headline', type: 'textarea', rows: 2, help: ACCENT_HELP },
+    { key: 'explorationsIntro', label: 'Other products: intro', type: 'textarea', wide: true },
   ] },
   { type: 'section', title: 'Epilogue (contact)' },
   { key: 'contact', type: 'group', fields: [
     { key: 'eyebrow', label: 'Label', type: 'text' },
     { key: 'cta', label: 'Button text', type: 'text' },
-    { key: 'title', label: 'Headline', type: 'text', wide: true, help: ACCENT_HELP },
+    { key: 'title', label: 'Headline', type: 'textarea', rows: 2, wide: true, help: ACCENT_HELP },
     { key: 'body', label: 'Text', type: 'textarea', wide: true },
   ] },
 ];
@@ -244,13 +257,16 @@ const ABOUT = [
   { key: 'about', type: 'group', fields: [
     { type: 'section', title: 'On the home page' },
     { key: 'eyebrow', label: 'Label', type: 'text' },
-    { key: 'portrait', label: 'Portrait photo', type: 'media', help: 'A warm, well-lit photo builds trust fast. Portrait (4:5) works best.' },
+    { key: 'portrait', label: 'Portrait photo', type: 'media', help: 'Appears in the homepage introduction and About page. Upload a real portrait; 4:5 works best. An explicit portrait placeholder appears until uploaded.' },
     { key: 'title', label: 'Headline', type: 'textarea', wide: true, rows: 2, help: ACCENT_HELP },
+    { key: 'portraitMotion', label: 'Subtle portrait animation', type: 'toggle', help: 'Gentle pointer movement on the homepage. Automatically disabled for touch and reduced-motion preferences.' },
+    { key: 'homeTone', label: 'Homepage About background', type: 'select', options: [['ink', 'Deep teal'], ['sage', 'Soft sage']] },
+    { key: 'principle', label: 'Personal design principle', type: 'textarea', wide: true, help: 'Shown below the About headline on the homepage.' },
     { key: 'preview', label: 'Short bio', type: 'md', wide: true },
-    { key: 'stats', label: 'Numbers', type: 'list', inline: true, wide: true, addLabel: 'Add number', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text' }, { key: 'label', label: 'Label', type: 'text' }] },
-    { key: 'now', label: 'Right now', type: 'list', inline: true, wide: true, addLabel: 'Add item', make: () => ({ label: '', text: '' }), fields: [{ key: 'label', label: 'Label', type: 'text', placeholder: 'Leading' }, { key: 'text', label: 'Text', type: 'text' }] },
+    { key: 'stats', label: 'About page numbers', type: 'list', inline: true, wide: true, addLabel: 'Add number', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text' }, { key: 'label', label: 'Label', type: 'text' }] },
+    { key: 'now', label: 'Right now (About page)', type: 'list', inline: true, wide: true, addLabel: 'Add item', make: () => ({ label: '', text: '' }), fields: [{ key: 'label', label: 'Label', type: 'text', placeholder: 'Leading' }, { key: 'text', label: 'Text', type: 'text' }] },
     { type: 'section', title: 'About page' },
-    { key: 'pageTitle', label: 'Headline', type: 'text', wide: true, help: ACCENT_HELP },
+    { key: 'pageTitle', label: 'Headline', type: 'textarea', rows: 2, wide: true, help: ACCENT_HELP },
     { key: 'pageLead', label: 'Lead', type: 'md', wide: true },
     { key: 'body', label: 'Full bio', type: 'md', wide: true, rows: 12 },
     { key: 'experience', label: 'Experience', type: 'list', wide: true, addLabel: 'Add role', make: () => ({ role: '', company: '', period: '', location: '' }), itemLabel: (x) => [x.role, x.company].filter(Boolean).join(' · '), fields: [
@@ -267,22 +283,22 @@ const ABOUT = [
 ];
 
 const METHOD = [
-  { type: 'section', title: 'Method (horizontal “acts”)' },
+  { type: 'section', title: 'Method (expandable steps)' },
   { key: 'process', type: 'group', fields: [
     { key: 'eyebrow', label: 'Label', type: 'text' },
-    { key: 'title', label: 'Headline', type: 'text', help: ACCENT_HELP },
+    { key: 'title', label: 'Headline', type: 'textarea', rows: 2, help: ACCENT_HELP },
     { key: 'intro', label: 'Intro', type: 'textarea', wide: true },
     { key: 'steps', label: 'Acts', type: 'list', wide: true, addLabel: 'Add act', make: () => ({ label: '', title: '', body: '', chips: [] }), itemLabel: (x) => plain(x.label || x.title), fields: [
       { key: 'label', label: 'Label', type: 'text', placeholder: 'Act I · Understand' },
-      { key: 'title', label: 'Headline', type: 'text' },
+      { key: 'title', label: 'Headline', type: 'textarea', rows: 2 },
       { key: 'body', label: 'Text', type: 'textarea', wide: true },
       { key: 'chips', label: 'Proof points', type: 'tags', wide: true },
     ] },
   ] },
-  { type: 'section', title: 'What I bring (services)' },
+  { type: 'section', title: 'Archived services', help: 'Retained from the previous layout. These fields are not shown on the current website.' },
   { key: 'services', type: 'group', fields: [
     { key: 'eyebrow', label: 'Label', type: 'text' },
-    { key: 'title', label: 'Headline', type: 'text' },
+    { key: 'title', label: 'Headline', type: 'textarea', rows: 2 },
     { key: 'intro', label: 'Intro', type: 'textarea', wide: true },
     { key: 'items', label: 'Services', type: 'list', wide: true, addLabel: 'Add service', make: () => ({ title: '', body: '', list: [] }), itemLabel: (x) => x.title, fields: [
       { key: 'title', label: 'Title', type: 'text', wide: true },
@@ -293,12 +309,14 @@ const METHOD = [
 ];
 
 const TESTIMONIALS = [
-  { type: 'note', text: 'Portfolios with 2–3 short quotes from a PM, engineer or founder convert far better. The section sits on the home page after More work. Until you add quotes, it shows a card inviting past clients to send you one.' },
+  { type: 'note', text: 'Add genuine quotes from people you have worked with. Published quotes and the optional invitation appear before Contact. Keep sample quotes unpublished. The invitation opens an email to the contact address in Site settings.' },
   { key: 'testimonials', type: 'group', fields: [
     { key: 'show', label: 'Show testimonials section', type: 'toggle' },
+    { key: 'autoplay', label: 'Rotate testimonials automatically', type: 'toggle', help: 'Starts when two or more real quotes are published. Pauses for hover, keyboard focus and reduced-motion preferences. Visitors can pause it.' },
     { key: 'eyebrow', label: 'Label', type: 'text' },
-    { key: 'title', label: 'Headline', type: 'text' },
-    { key: 'requestTitle', label: '“Ask for a testimonial” card title', type: 'text', help: 'Card with a button that emails you. Clear the title to hide it.' },
+    { key: 'title', label: 'Headline', type: 'textarea', rows: 2 },
+    { key: 'showRequestCard', label: 'Show invitation to share a testimonial', type: 'toggle', help: 'Keeps the section visible while you collect genuine recommendations.' },
+    { key: 'requestTitle', label: '“Ask for a testimonial” card title', type: 'text' },
     { key: 'requestCta', label: 'Card button', type: 'text' },
     { key: 'requestText', label: 'Card text', type: 'textarea', wide: true, rows: 2 },
     { key: 'items', label: 'Quotes', type: 'list', wide: true, addLabel: 'Add quote', make: () => ({ published: true, quote: '', name: '', role: '', avatar: '' }), itemLabel: (x) => `${x.published === false ? '(hidden) ' : ''}${x.name || plain(x.quote).slice(0, 60)}`, fields: [
@@ -328,7 +346,7 @@ const BLOCKS = {
     { key: 'text', label: 'Quote', type: 'textarea', wide: true },
     { key: 'attribution', label: 'Who said it', type: 'text', wide: true, help: 'Anonymise research participants, e.g. “Civil servant, 34, Lagos”.' },
   ] },
-  kpis: { label: 'Metrics', desc: 'Big animated numbers', fields: [
+  kpis: { label: 'Metrics', desc: 'Metrics with source context', fields: [
     { key: 'items', label: 'Metrics', type: 'list', inline: true, wide: true, addLabel: 'Add metric', make: () => ({ value: '', label: '' }), fields: [{ key: 'value', label: 'Value', type: 'text' }, { key: 'label', label: 'Label', type: 'text' }] },
     { key: 'note', label: 'How this was measured', type: 'md', wide: true, help: 'One line: the tool, the baseline and the time window. Example: “Google Analytics, 3 months before vs. 3 months after launch.” Interviewers will ask.' },
   ] },
@@ -366,19 +384,30 @@ const BLOCK_COMMON = [
 
 const PROJECT_CARD = [
   { key: 'title', label: 'Project title', type: 'text', wide: true, help: ACCENT_HELP },
-  { key: 'kind', label: 'Type', type: 'select', rerender: true, options: [['case-study', 'Case study: full story page'], ['card', 'Project card: More work grid']] },
+  { key: 'shortTitle', label: 'Homepage navigation name', type: 'text', help: 'Short project name used in the chapter index and links. Falls back to the full title.' },
+  { key: 'kind', label: 'Type', type: 'select', rerender: true, options: [['case-study', 'Case study: full story page'], ['card', 'Other product: expandable row']] },
   { key: 'published', label: 'Show on site', type: 'toggle', help: 'Turn off to hide this project without deleting it.' },
   { key: 'slug', label: 'Page address', type: 'slug', help: 'yoursite.com/work/…' },
   { key: 'category', label: 'Category line', type: 'text', placeholder: 'Mobile · Fintech' },
   { key: 'status', label: 'Status', type: 'text', placeholder: 'Shipped' },
   { key: 'year', label: 'Year / timeline', type: 'text', placeholder: '2025' },
-  { key: 'accent', label: 'Project colour', type: 'color', help: 'Themes the card and the case study.' },
+  { key: 'accent', label: 'Project colour', type: 'color', help: 'Used for decorative details within the case study. Text uses the accessible site palette.' },
   { key: 'tags', label: 'Tags', type: 'tags' },
   { key: 'hook', label: 'Hook: one line that makes them click', type: 'textarea', wide: true, rows: 2, counter: [60, 140] },
   { key: 'summary', label: 'Summary', type: 'md', wide: true },
   { key: 'cover', label: 'Cover image or video', type: 'media', wide: true },
-  { key: 'coverFit', label: 'Cover display', type: 'select', options: [['', 'Fill the frame (crops edges)'], ['contain', 'Framed: shows the whole image']] },
-  { ...stat('Card metrics'), wide: true, help: 'Three numbers work best.' },
+  { key: 'featured', label: 'Feature as a homepage chapter', type: 'toggle', help: 'Published featured case studies form the main story in project-list order. Other case studies appear in More work.' },
+  { type: 'section', title: 'Homepage story', help: 'These fields appear on featured case studies. Keep each paragraph focused on one idea.' },
+  { key: 'storyTitle', label: 'Chapter headline', type: 'textarea', rows: 2, wide: true, help: ACCENT_HELP },
+  { key: 'storyContext', label: 'The challenge', type: 'textarea', wide: true },
+  { key: 'storyContribution', label: 'My contribution', type: 'textarea', wide: true },
+  { key: 'storyOutcome', label: 'Where it stands', type: 'textarea', wide: true, help: 'State the delivery stage and verified evidence. Separate your role from the team’s work.' },
+  { key: 'storyCta', label: 'Case-study image link text', type: 'text', help: 'Text inside this project’s image that opens its case study. Leave blank to use the Home page default.' },
+  { key: 'storyNext', label: 'Bridge to the next chapter', type: 'textarea', wide: true, help: 'Links to the next featured project, or Method after the final project. Leave blank to hide.' },
+  { type: 'section', title: 'Artwork and links' },
+  { key: 'art', label: 'Diagram when no cover is supplied', type: 'select', options: [['', 'None'], ['banking', 'Design coordination map'], ['token', 'Authentication relationship']] },
+  { key: 'coverFit', label: 'Supporting-work thumbnail display', type: 'select', help: 'Featured chapter images and case-study images preserve the full source image.', options: [['', 'Fill the frame (crops edges)'], ['contain', 'Framed: shows the whole image']] },
+  { ...stat('Archived card metrics'), wide: true, help: 'Not shown in the current homepage. Add verified metrics as a case-study block, including their source.' },
   { ...linkList(), wide: true, help: 'The first link opens from a project card; case studies show all of them.' },
 ];
 
@@ -529,11 +558,19 @@ function mediaField(f, obj, set) {
   } });
   const draw = () => {
     const v = obj[f.key] || '';
-    const thumb = !v ? 'No file' : isVideo(v) ? h('video', { src: v, muted: true, autoplay: true, loop: true, playsInline: true }) : isPdf(v) ? 'PDF' : h('img', { src: v, alt: '' });
+    const thumb = !v ? 'No file' : isVideo(v) ? h('video', { src: v, muted: true, autoplay: true, loop: true, playsInline: true }) : isPdf(v) ? 'PDF' : f.allowLink ? 'LINK' : h('img', { src: v, alt: '' });
     box.replaceChildren(
       h('div.media-thumb', {}, thumb),
       h('div.media-side', {},
         v ? h('div.media-name', { title: v }, v) : h('div.field-help', {}, 'Drop a file here, upload, or pick from your library.'),
+        f.allowLink ? h('input.input', { type: 'text', value: v, 'aria-label': 'Résumé link', placeholder: 'https://drive.google.com/…', onchange: (event) => {
+          const url = event.target.value.trim();
+          if (url && !/^https:\/\//i.test(url) && !/^\/uploads\/[^?#]+\.pdf(?:[?#]|$)/i.test(url)) {
+            event.target.value = v;
+            return toast('Use an HTTPS Drive/PDF link or upload a PDF.', 'error');
+          }
+          set(url); draw();
+        } }) : null,
         h('div.media-actions', {},
           h('button.btn.btn-ghost.btn-sm', { type: 'button', onclick: () => fileInput.click() }, 'Upload'),
           h('button.btn.btn-ghost.btn-sm', { type: 'button', onclick: () => pickMedia(kinds).then((url) => { if (url) { set(url); draw(); } }) }, 'Choose from library'),
@@ -696,7 +733,7 @@ function pickMedia(kinds = ['image', 'video']) {
 
 const NAV = [
   ['Overview', [['', '◎', 'Dashboard']]],
-  ['Content', [['projects', '▦', 'Projects', () => state.content.projects.length], ['home', '⌂', 'Home page'], ['about', '☺', 'About'], ['method', '≡', 'Method & services'], ['testimonials', '❝', 'Testimonials', () => state.content.testimonials?.items?.length || '']]],
+  ['Content', [['projects', '▦', 'Projects', () => state.content.projects.length], ['home', '⌂', 'Home page'], ['about', '☺', 'About'], ['method', '≡', 'Method'], ['testimonials', '❝', 'Testimonials', () => state.content.testimonials?.items?.length || '']]],
   ['Settings', [['site', '⚙', 'Site settings'], ['media', '▣', 'Media library'], ['history', '↺', 'History']]],
 ];
 
@@ -730,26 +767,22 @@ function formView(title, sub, schema, previewPath = '/') {
 function healthChecks(c) {
   const studies = c.projects.filter((p) => p.published && p.kind === 'case-study');
   const checks = [
-    [Boolean(c.about.portrait), 'Add a portrait photo', 'People hire people. A real photo on the About section builds trust instantly.', '#/about'],
-    [(c.testimonials.items || []).filter((t) => t.quote && t.published !== false).length >= 2, 'Add 2–3 testimonials', 'A PM or engineer vouching for you is the strongest proof on a portfolio.', '#/testimonials'],
-    [Boolean(c.site.resumeUrl), 'Upload your résumé (PDF)', 'Recruiters look for it within the first minute.', '#/site'],
-    [Boolean(c.site.bookingUrl), 'Add a booking link', 'A free Calendly link turns “maybe later” into a call this week.', '#/site'],
+    [Boolean(c.about.portrait), 'Add a portrait photo', 'Replaces the portrait placeholder on the homepage and About page.', '#/about'],
+    [Boolean(c.site.resumeUrl), 'Upload your résumé (PDF)', 'Makes the résumé preview available across the site.', '#/site'],
     [Boolean(c.site.siteUrl), 'Set your live site address', 'Enables share-image previews on LinkedIn and Slack.', '#/site'],
     [(c.site.seoDescription || '').length >= 100, 'Write a search description', 'Shown on Google and link previews.', '#/site'],
-    [studies.length >= 3, 'Publish at least 3 case studies', 'Three strong stories beat eight thin ones.', '#/projects'],
+    [studies.length > 0, 'Add a case study', 'Describe your role, the work and its current stage.', '#/projects'],
   ];
   for (const p of studies) {
     const g = p.glance || {};
     const missing = [];
-    if (!p.cover) missing.push('cover');
-    if ((p.stats || []).length < 3) missing.push('3 metrics');
+    if (!p.cover && !p.art) missing.push('cover or labelled diagram');
     if (!(g.problem && g.solution && g.impact)) missing.push('at-a-glance');
     if (!(p.meta || []).length) missing.push('facts row');
     if (!(p.meta || []).some((m) => /team/i.test(m.label || ''))) missing.push('team in facts row');
     if ((p.blocks || []).some((b) => b.type === 'kpis') && !(p.blocks || []).some((b) => b.type === 'kpis' && b.note)) missing.push('how metrics were measured');
-    if (!(p.blocks || []).some((b) => ['image', 'embed'].includes(b.type) && /\.(mp4|webm)|figma|youtu|vimeo|loom/i.test(`${b.src || ''} ${b.url || ''}`))) missing.push('prototype video or embed');
     if (!(p.blocks || []).some((b) => /reflect|learn/i.test(`${b.eyebrow} ${b.heading}`))) missing.push('reflection');
-    checks.push([!missing.length, `${plain(p.title)} is story-complete`, missing.length ? `Missing: ${missing.join(', ')}.` : 'Cover, metrics, glance, facts and reflection all in place.', `#/projects/${p.id}`]);
+    checks.push([!missing.length, `${plain(p.title)} content checks`, missing.length ? `Missing: ${missing.join(', ')}.` : 'Artwork, context, role and reflection are present. Check the evidence before publishing.', `#/projects/${p.id}`]);
   }
   return checks;
 }
@@ -772,7 +805,7 @@ function dashboardView() {
     ),
     h('div.two-col', {},
       h('div.panel', {},
-        h('div.score', {}, h('div.score-ring', { style: `--p:${pct}` }, h('span', {}, `${pct}%`)), h('div', {}, h('strong', {}, 'Portfolio strength'), h('p.field-help', {}, `${done} of ${checks.length} hiring-ready checks done.`))),
+        h('div.score', {}, h('div.score-ring', { style: `--p:${pct}` }, h('span', {}, `${pct}%`)), h('div', {}, h('strong', {}, 'Content checklist'), h('p.field-help', {}, `${done} of ${checks.length} content checks complete. This is not a rating of design quality.`))),
         h('div.health', {}, checks.map(([ok, title, text, link]) => h('div.health-row', {},
           h(`span.health-ico.${ok ? 'ok' : 'todo'}`, {}, ok ? '✓' : '!'),
           h('div', {}, h('strong', {}, title), h('p', {}, text)),
@@ -831,7 +864,7 @@ function projectsView() {
   };
   draw();
   return [
-    pageHead('Projects', 'Drag to reorder. Case studies appear as the stacked story cards; project cards appear under “Side quests”.', [
+    pageHead('Projects', 'Drag to reorder. Featured case studies form the homepage chapters in this order. Other products appear as expandable rows.', [
       h('button.btn.btn-accent', { type: 'button', onclick: () => newProjectDialog() }, '+ New project'),
     ]),
     list,
@@ -846,7 +879,7 @@ function newProjectDialog() {
     title: 'New project',
     body: [
       h('div.field', {}, h('label.field-label', {}, 'Title'), title, h('div.field-help', {}, ACCENT_HELP.cloneNode(true))),
-      h('div.radio-cards', {}, radio('case-study', 'Case study', 'Full story page with chapters. Starts from a proven template.'), radio('card', 'Project card', 'A compact card in “Side quests”. No page.')),
+      h('div.radio-cards', {}, radio('case-study', 'Case study', 'A full story page. Add your actual context, contribution and evidence.'), radio('card', 'Project card', 'An expandable row under Other products. No separate page.')),
     ],
     actions: [
       { label: 'Cancel', run: (c) => c() },
@@ -865,21 +898,18 @@ function newProjectDialog() {
 function newProject(title, kind) {
   const p = {
     id: uid(), slug: slugify(title), published: false, kind, title,
-    category: '', status: 'Shipped', year: '', tags: [], accent: '#EF5A28',
+    category: '', status: '', featured: false, art: '', storyTitle: '', storyContext: '', storyContribution: '', storyOutcome: '', storyNext: '', year: '', tags: [], accent: '#EF5A28',
     hook: '', summary: '', cover: '', stats: [{ value: '', label: '' }, { value: '', label: '' }, { value: '', label: '' }],
     meta: [{ label: 'Role', value: '' }, { label: 'Timeline', value: '' }, { label: 'Platform', value: '' }, { label: 'Scope', value: '' }],
     links: [], glance: { problem: '', solution: '', impact: '' }, blocks: [],
   };
   if (kind === 'case-study') {
     p.blocks = [
-      { type: 'kpis', eyebrow: 'Impact', heading: '', body: '', items: [{ value: '', label: '' }, { value: '', label: '' }, { value: '', label: '' }] },
-      { type: 'text', eyebrow: 'The problem', heading: 'What was broken, and *why it mattered.*', body: 'Set the scene: the business, the users, and the moment things had to change.' },
-      { type: 'text', eyebrow: 'Research', heading: 'What I learned *before designing anything.*', body: 'Who you spoke to, how many, and the one insight that changed the direction.' },
-      { type: 'quote', eyebrow: '', heading: '', body: '', text: 'A real quote from a user that captures the problem.', attribution: 'Role, age, city' },
-      { type: 'callout', eyebrow: 'The turning point', heading: 'The decision that *changed the outcome.*', body: 'The trade-off you made, who you convinced, and how.', label: 'The solution', text: '' },
-      { type: 'image', eyebrow: 'Design', heading: 'From flows to *final screens.*', body: '', src: '', caption: '', wide: false },
-      { type: 'text', eyebrow: 'Outcome', heading: 'What *moved.*', body: 'Numbers first, then what they meant for the business and the users.' },
-      { type: 'cards', eyebrow: 'Reflection', heading: 'What this project *taught me.*', body: '', style: 'learning', columns: 3, items: [{ label: '', body: '' }, { label: '', body: '' }, { label: '', body: '' }] },
+      { type: 'text', eyebrow: 'Context', heading: '', body: '' },
+      { type: 'text', eyebrow: 'My contribution', heading: '', body: '' },
+      { type: 'image', eyebrow: 'Design evidence', heading: '', body: '', src: '', caption: '', wide: false },
+      { type: 'text', eyebrow: 'Current status', heading: '', body: '' },
+      { type: 'text', eyebrow: 'Reflection', heading: '', body: '' },
     ];
   }
   return p;
@@ -906,7 +936,7 @@ function projectView(id, tab = 'card') {
       renderField({ key: 'blocks', type: 'blocks' }, p, { rerender })),
   }[tab]();
   container.append(
-    pageHead(plain(p.title) || 'Untitled project', isCase ? 'A full case-study page with its own address.' : 'A compact card in the “Side quests” grid.', [
+    pageHead(plain(p.title) || 'Untitled project', isCase ? 'A full case-study page with its own address.' : 'An expandable row in Other products.', [
       h('button.btn.btn-ghost', { type: 'button', onclick: () => preview(currentPreviewPath) }, 'Preview this'),
       p.published && isCase ? h('a.btn.btn-ghost', { href: `/work/${p.slug}`, target: '_blank', rel: 'noopener' }, 'View live ↗') : null,
     ]),
@@ -980,7 +1010,7 @@ async function route(keepScroll = false) {
         break;
       case 'home': nodes = formView('Home page', 'The story visitors scroll through, top to bottom.', HOME, '/'); break;
       case 'about': nodes = formView('About', 'Your bio on the home page and the full About page.', ABOUT, '/about'); break;
-      case 'method': nodes = formView('Method & services', 'How you work, told in three acts, and what you bring.', METHOD, '/#process'); break;
+      case 'method': nodes = formView('Method', 'Edit the process headline and expandable steps. Services are archived.', METHOD, '/#process'); break;
       case 'testimonials': nodes = formView('Testimonials', 'Short quotes from people you have worked with.', TESTIMONIALS, '/'); break;
       case 'site': nodes = formView('Site settings', 'Identity, contact details, colours and search appearance.', SITE, '/'); break;
       case 'media': nodes = await mediaView(); break;

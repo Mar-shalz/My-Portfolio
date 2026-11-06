@@ -4,14 +4,14 @@
   --panel-2: #FAFAF7;
   --ink: #0E1830;
   --ink-2: #545D72;
-  --ink-3: #8C93A3;
+  --ink-3: #5B6577;
   --line: #E4E2DB;
   --line-2: #EEECE6;
-  --ac: #EF5A28;
+  --ac: #A53920;
   --ac-soft: #FDEDE6;
-  --ok: #178A55;
+  --ok: #11633D;
   --ok-soft: #E4F5EC;
-  --warn: #B7791F;
+  --warn: #81500C;
   --warn-soft: #FDF3E1;
   --bad: #D0343A;
   --bad-soft: #FCE9EA;
@@ -72,7 +72,7 @@ code { font-family: var(--mono); font-size: 12px; background: var(--line-2); pad
 .btn-primary { background: var(--ink); color: #fff; }
 .btn-primary:hover:not(:disabled) { background: #1C2A4B; }
 .btn-accent { background: var(--ac); color: #fff; }
-.btn-accent:hover { background: #D94B1C; }
+.btn-accent:hover { background: #7E2A18; }
 .btn-ghost { border: 1px solid var(--line); background: var(--panel); }
 .btn-ghost:hover { border-color: var(--ink-3); }
 .btn-danger { color: var(--bad); border: 1px solid #F1C9CB; background: var(--panel); }
@@ -297,3 +297,11 @@ code { font-family: var(--mono); font-size: 12px; background: var(--line-2); pad
   .media-field { grid-template-columns: 1fr; }
   .radio-cards { grid-template-columns: 1fr; }
 }
+
+/* Comfortable controls and readable supporting text. */
+.sb-group{color:#AEBBD1}.sb-brand small,.sb-item .count{color:#B8C4D9}
+.btn,.btn-sm{min-height:44px;height:auto;padding-block:10px}.icon-btn{width:44px;height:44px}
+.input,.select{min-height:44px}.input::placeholder,.textarea::placeholder{color:#657085;opacity:1}
+.field-label{font-size:14px}.field-help,.help{font-size:13px;line-height:1.6}
+.sb-item,.sb-link{min-height:44px;display:flex;align-items:center}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}

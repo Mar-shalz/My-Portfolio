@@ -11,7 +11,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch-path=lib --watch-path=server.js --watch-path=public server.js",
-    "export": "node scripts/export.js"
+    "export": "node scripts/export.js",
+    "test": "node --test scripts/check-store-save.js scripts/check-github-save.js && node scripts/check-editor-save.js && node scripts/check-ui.js"
   },
   "dependencies": {
     "express": "^5.2.1",
