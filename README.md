@@ -166,6 +166,11 @@ failed writes, edits made while publishing, slug changes, retries and the existi
 UI interactions. These checks use temporary files or in-memory responses and do
 not write to the portfolio content.
 
+The suite also exercises the GitHub client and store together: SHA conflicts,
+expired or restricted tokens, network failures, retries and history restoration.
+Live publishing was verified on 6 November 2026; see `PORTFOLIO-AUDIT.md` for the
+CMS and deployment checks.
+
 Local saving checks the disk revision and writes without yielding, so a stale
 publish is rejected instead of replacing newer content. The editor keeps edits
 made during a request marked “Unpublished changes” and uses the returned revision

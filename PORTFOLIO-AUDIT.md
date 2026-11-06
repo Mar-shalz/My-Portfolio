@@ -34,7 +34,7 @@ Verdict: The two demonstrated save races are fixed. Run `npm test` to repeat the
 
 Lean: -24 lines, -2 dependencies possible, excluding generated lockfile changes.
 
-Not checked: Live GitHub writes/deployments, a multi-process production host, sustained load, real assistive technology, historical files under `legacy`, and third-party package internals. I read the active server, auth, store, GitHub client, text/image helpers, rendering, interaction script, CMS save/media/history paths, README and deployment/export configuration. The reproductions used temporary data, not the portfolio's content.
+Not checked in the original audit: Live GitHub writes/deployments, a multi-process production host, sustained load, real assistive technology, historical files under `legacy`, and third-party package internals. Live publishing was subsequently checked as recorded below. I read the active server, auth, store, GitHub client, text/image helpers, rendering, interaction script, CMS save/media/history paths, README and deployment/export configuration. The original reproductions used temporary data, not the portfolio's content.
 
 ---
 
@@ -46,4 +46,16 @@ No additional blocking defect was found in the new interaction logic. The two co
 
 Verdict: The local UI preview and both CMS save fixes are ready. Image labels are editable in the CMS; résumé placement and navigation styles match the latest requested layout.
 
-Not checked: A populated Drive folder or an actual résumé document: the owner confirmed that the linked folder is intentionally empty and will add CVs later. The owner will also add real quotes in the CMS; the two saved sample quotes remain unpublished. No claim of a complete accessibility certification is made.
+Not checked: A populated Drive folder or an actual résumé document: the owner confirmed that the linked folder is intentionally empty and will add CVs later. The sample quotes were unpublished at this review; the subsequent GitHub merge preserved the owner's published quote from Adefope Oluwatosin. No claim of a complete accessibility certification is made.
+
+## Live publishing verification — 6 November 2026
+
+- Pushed the portfolio and CMS update as `51baf8d`, preserving the remote CMS commits through version 19 and the owner's approved testimonial. The merged content became version 20.
+- Published through the signed-in production CMS to create version 21 (`259dbe9`). The test corrected a stray space before a full stop in the testimonial invitation, initially with a trailing space.
+- Removed that trailing space while the first request still showed “Publishing…”. After the response, the editor retained this newer text, showed “Unpublished changes” and enabled publishing again.
+- Published the preserved newer draft as version 22 (`69b75cb`). Compared the complete normalized document against version 20: only the intended invitation text and revision/timestamp metadata changed. Projects, images, résumé settings and testimonials were preserved.
+- Attempted a publish from a second tab still holding version 20. The CMS rejected it with “The content was changed somewhere else since you opened it. Reload to get the latest version.” The rejected draft remained editable and unpublished; GitHub retained version 22.
+- Vercel reported successful production deployments for the code update and version 22. A fresh public-page visit showed the corrected invitation text, the preserved approved testimonial and the updated portfolio. Reloading the CMS showed the saved text, “Live” status and a disabled Publish button.
+- `npm test` passes 11 local/GitHub storage cases plus the editor and UI assertion suites. These cover restoration, failed writes, SHA conflicts, rejected credentials, retries and edits during publication without touching production data.
+
+Limits: This is a verified publish/refresh cycle, not a sustained-load or host-outage test. Local disk storage still requires one writer process. Original findings 3 and 4 remain open.
