@@ -1,6 +1,6 @@
 {
-  "_rev": 20,
-  "updatedAt": "2026-11-06T06:19:40.812Z",
+  "_rev": 21,
+  "updatedAt": "2026-11-06T06:22:58.184Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -646,7 +646,8 @@
       "storyContribution": "I own the product design end to end, from the flows and interface through design review of the implementation. Engineering owns the implementation.",
       "storyOutcome": "Implemented and in TestFlight QA and internal testing. Public release is planned with Internet Banking; it has not launched publicly.",
       "storyNext": "Different responsibilities. The same habit: stay close to the work as it becomes real.",
-      "shortTitle": "E-Token"
+      "shortTitle": "E-Token",
+      "tools": []
     },
     {
       "id": "chopbaze-website",
@@ -739,7 +740,8 @@
           "heading": "Carry the design *through implementation.*",
           "body": "This project shows how AI-assisted coding extends my hands-on design practice. I took responsibility for both the website’s design and its implementation, following the work beyond the design file into a live experience."
         }
-      ]
+      ],
+      "tools": []
     },
     {
       "id": "fast-credit-website",
@@ -1605,7 +1607,7 @@
     ],
     "show": true,
     "requestTitle": "Worked with me?",
-    "requestText": "I'd love to hear how it went . A few honest words about working together help me more than anything on this page.",
+    "requestText": "I'd love to hear how it went. A few honest words about working together help me more than anything on this page. ",
     "requestCta": "Share a testimonial",
     "showRequestCard": true,
     "autoplay": true
