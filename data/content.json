@@ -1,6 +1,6 @@
 {
-  "_rev": 24,
-  "updatedAt": "2026-11-07T00:10:01.129Z",
+  "_rev": 25,
+  "updatedAt": "2026-11-07T00:12:03.659Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1728,7 +1728,7 @@
   "contact": {
     "eyebrow": "Have something in mind?",
     "title": "Let’s make *something matter.*",
-    "body": "I'm open to product design roles and select projects. If you're a founder, PM or design lead with a real product challenge, let's talk.",
+    "body": "I'm open to Product Design and UI/UX roles and select projects. If you're a founder, PM or design lead with a real product challenge, let's talk.",
     "cta": "Email me"
   }
 }
