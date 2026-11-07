@@ -47,7 +47,10 @@ The portal writes these files for you. Editing `content.json` by hand also works
 
 The site runs on Vercel's free Hobby plan. When you press **Publish** in the
 portal, it saves your content and uploads into this GitHub repo, and Vercel
-redeploys the site automatically (about a minute). Git history doubles as the
+redeploys the site automatically. Public pages also read the latest published content
+from GitHub with a 30-second cache, so content updates do not depend on that
+deployment finishing. If GitHub cannot be reached, the last available content
+stays visible. Reload the public page to see a publish. Git history doubles as the
 backup, so **History** in the portal can roll back any publish.
 
 1. Push this project to a GitHub repository (private is fine).
@@ -142,7 +145,7 @@ Featured case-study titles are plain headings. The coloured image panels and
 The UI/UX title is included alongside Product Design, and case-study status
 labels use a quiet colour separate from the live-product buttons.
 
-Two or more published testimonials become an automatic carousel. CMS →
+Two or more published testimonials become a horizontal, swipeable automatic carousel. CMS →
 Testimonials controls automatic rotation. Hover, keyboard focus, manual
 navigation, hidden tabs and reduced-motion preferences stop rotation; visitors
 can use previous/next or pause/resume. Sample quotes stay unpublished.
@@ -154,10 +157,9 @@ folder's public contents. The owner intentionally keeps a stable folder link so 
 replacements appear without editing the portfolio link. The folder is currently empty.
 
 The rounded arrow cursor follows the supplied reference without click rays. It
-uses a native cursor asset on fine-pointer devices; text fields keep their text
-cursor. The glass navbar keeps the résumé overlay accessible on desktop and
-mobile; the hero has no résumé link. Chapter bridge links have distinct default
-and hover/focus backgrounds in both themes.
+uses a native cursor asset on fine-pointer devices; clickable controls use a hand
+and text fields keep their text cursor. The glass navbar keeps the résumé overlay accessible on desktop and
+mobile; the hero has no résumé link. Chapter bridge links have no background fill and change text and border colour on hover/focus in both themes.
 
 ### Save regression checks
 
@@ -177,3 +179,18 @@ made during a request marked “Unpublished changes” and uses the returned rev
 for the next publish. The local file store supports one Node server process;
 multiple writer processes require shared locking. GitHub storage retains its
 existing SHA-based conflict handling.
+
+### Unpublished draft autosave
+
+Every edit is saved synchronously in this browser’s local storage. Refreshing
+restores the current draft; reopening the CMS recovers the only saved draft or
+opens a chooser when several exist. Each tab keeps its edits separate. A draft
+retains its original published revision, so stale drafts cannot overwrite newer
+content. Publish clears only the successfully published draft; edits made during
+a publish remain saved and unpublished. Preview never publishes.
+
+Drafts are browser/device-specific. Clearing site data or using private browsing
+can remove them. Storage failures show “Draft not saved” and a leaving-page warning.
+Use the live CMS for the live portfolio: the local editor only updates this computer.
+Homepage covers and case-study hero images are separate fields; clear a hero image
+to use the cover automatically.

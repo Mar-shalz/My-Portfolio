@@ -1,6 +1,7 @@
 // Portfolio CMS portal. A small schema-driven editor over one JSON document:
 // every page below is described as a list of fields, and generic renderers turn
 // those fields into inputs that write straight back into the draft.
+import { createDraftStore } from './drafts.js';
 
 /* ============================================================ helpers */
 
@@ -42,8 +43,9 @@ const timeAgo = (iso) => {
 
 /* ============================================================ state & API */
 
-const state = { content: null, rev: 0, dirty: false, editVersion: 0, saving: false, media: null, mode: 'local' };
+const state = { content: null, rev: 0, dirty: false, editVersion: 0, saving: false, draftSaved: false, draftError: false, latestRev: 0, media: null, mode: 'local' };
 const openItems = new WeakSet();
+const drafts = createDraftStore();
 
 async function api(path, { method = 'GET', body, form } = {}) {
   const opts = { method, headers: { 'X-CMS': '1' }, credentials: 'same-origin' };
@@ -71,14 +73,85 @@ function toast(msg, type = '') {
 function markDirty() {
   state.editVersion += 1;
   state.dirty = true;
+  persistDraft();
   updateStatus();
+}
+
+function persistDraft() {
+  if (!state.dirty || !state.content) return;
+  try {
+    drafts.save(state.content, state.rev, state.mode);
+    state.draftSaved = true;
+    state.draftError = false;
+  } catch {
+    state.draftSaved = false;
+    if (!state.draftError) toast('Autosave could not store your draft. Keep this tab open or publish before leaving.', 'error');
+    state.draftError = true;
+  }
+}
+
+function clearDraft() {
+  try { drafts.clear(); } catch { toast('The saved draft could not be removed from this browser.', 'error'); }
+  state.draftSaved = false;
+  state.draftError = false;
+}
+
+function recoverDraft(saved) {
+  drafts.restore(saved);
+  state.content = clone(saved.content);
+  state.rev = saved.rev;
+  state.editVersion += 1;
+  state.dirty = true;
+  state.draftSaved = true;
+  state.draftError = false;
+  updateStatus();
+  route(true);
+  toast('Draft recovered. Nothing has been published.');
+}
+
+function showSavedDrafts() {
+  try {
+    const saved = drafts.list(state.mode);
+    const close = modal({ title: 'Saved drafts on this browser', body: h('div.draft-list', {},
+      h('p', {}, 'Recover a draft to continue editing. Publishing is always a separate action. Drafts from older published versions keep their original version to prevent overwrites.'),
+      saved.length ? saved.map(item => h('div.draft-row', {},
+        h('div', {}, h('strong', {}, `Saved ${new Date(item.savedAt).toLocaleString()}`), h('p', {}, `Based on published version ${item.rev}`)),
+        h('button.btn.btn-ghost.btn-sm', { type: 'button', disabled: state.saving, onclick: () => {
+          try { if (state.dirty && drafts.current(state.mode)?.key === item.key) { close(); return; } if (state.dirty) { persistDraft(); if (!state.draftSaved) return; } recoverDraft(item); close(); }
+          catch (error) { toast(error.message, 'error'); }
+        } }, 'Recover'),
+        h('button.btn.btn-ghost.btn-sm', { type: 'button', disabled: state.dirty && drafts.current(state.mode)?.key === item.key, onclick: async () => {
+          if (!(await confirmBox('Discard saved draft?', 'This deletes only this unpublished draft from this browser. The published portfolio stays unchanged.', 'Discard draft'))) return;
+          try { drafts.discard(item); close(); showSavedDrafts(); } catch (error) { toast(error.message, 'error'); }
+        } }, 'Discard')
+      )) : h('p', {}, 'No saved drafts. Your next edit will be saved here automatically.')
+    ) });
+  } catch { toast('Saved drafts are unavailable. Browser storage may be blocked.', 'error'); }
+}
+
+async function discardCurrentDraft() {
+  if (state.saving || !state.dirty || !(await confirmBox('Discard this draft?', 'Your unpublished edits will be discarded and the latest published content will load. Your live portfolio will not change.', 'Discard draft'))) return;
+  try {
+    const current = await api('/content');
+    clearDraft();
+    state.content = current; state.rev = current._rev || 0; state.latestRev = state.rev; state.dirty = false;
+    updateStatus(); route(true);
+  } catch (error) { toast(error.message, 'error'); }
 }
 
 function updateStatus() {
   const el = $('#status');
   el.className = `status${state.saving ? ' is-saving' : state.dirty ? ' is-dirty' : ''}`;
-  el.textContent = state.saving ? 'Publishing…' : state.dirty ? 'Unpublished changes' : `Live · ${state.content?.updatedAt ? timeAgo(state.content.updatedAt) : ''}`;
+  el.textContent = state.saving ? 'Publishing…' : state.dirty ? state.draftSaved ? 'Draft saved on this browser' : 'Draft not saved on this browser' : `Live · ${state.content?.updatedAt ? timeAgo(state.content.updatedAt) : ''}`;
   $('#saveBtn').disabled = state.saving || !state.dirty;
+  const discard = $('#discardDraftBtn');
+  if (discard) discard.disabled = state.saving || !state.dirty;
+  const saved = $('#savedDraftsBtn');
+  if (saved) saved.disabled = state.saving;
+  const note = $('#draftNote');
+  if (note) note.textContent = state.dirty && state.rev !== state.latestRev
+    ? 'This draft started from an older published version. Your edits are kept, but publishing is blocked until you reconcile them with the live content.'
+    : 'Edits autosave on this browser only. They stay unpublished until you choose Publish changes.';
 }
 
 async function save() {
@@ -95,6 +168,7 @@ async function save() {
     state.rev = r.rev;
     draft._rev = r.rev;
     draft.updatedAt = r.updatedAt;
+    state.latestRev = r.rev;
     let changed = false;
     for (const p of draft.projects) {
       const sent = snapshot.projects.find((x) => x.id === p.id);
@@ -102,11 +176,13 @@ async function save() {
       if (sent && s && p.slug === sent.slug && s.slug !== p.slug) { p.slug = s.slug; changed = true; }
     }
     state.dirty = state.editVersion !== editVersion;
-    toast(state.dirty ? 'Published the earlier version. Your newer edits are still unpublished.' : state.mode === 'github' ? 'Published. Your live site updates in about a minute.' : 'Published. Your site is updated.');
+    if (state.dirty) persistDraft();
+    else clearDraft();
+    toast(state.dirty ? 'Published the earlier version. Your newer edits are still unpublished.' : state.mode === 'github' ? 'Published. Your live content updates within 30 seconds; reload the portfolio to see it.' : 'Published. Your site is updated.');
     // Rebuilding the form while someone types would interrupt their newer edits.
     if (changed && !state.dirty) route(true);
   } catch (e) {
-    if (state.content === draft) toast(e.message, 'error');
+    if (state.content === draft) toast(e.status === 409 ? `${e.message} Your draft is kept in Saved drafts.` : e.message, 'error');
   } finally {
     state.saving = false;
     updateStatus();
@@ -114,15 +190,10 @@ async function save() {
 }
 
 async function preview(path = '/') {
-  const win = window.open('', '_blank');
   try {
     const { html } = await api('/preview', { method: 'POST', body: { content: state.content, path } });
-    if (!win) return toast('Allow pop-ups for this site to see previews.', 'error');
-    win.document.open();
-    win.document.write(html);
-    win.document.close();
+    modal({ title: 'Preview your unpublished draft', wide: true, body: h('iframe.portfolio-preview', { title: 'Portfolio draft preview', srcdoc: html }) });
   } catch (e) {
-    win?.close();
     toast(e.message, 'error');
   }
 }
@@ -312,7 +383,7 @@ const TESTIMONIALS = [
   { type: 'note', text: 'Add genuine quotes from people you have worked with. Published quotes and the optional invitation appear before Contact. Keep sample quotes unpublished. The invitation opens an email to the contact address in Site settings.' },
   { key: 'testimonials', type: 'group', fields: [
     { key: 'show', label: 'Show testimonials section', type: 'toggle' },
-    { key: 'autoplay', label: 'Rotate testimonials automatically', type: 'toggle', help: 'Starts when two or more real quotes are published. Pauses for hover, keyboard focus and reduced-motion preferences. Visitors can pause it.' },
+    { key: 'autoplay', label: 'Rotate testimonials automatically', type: 'toggle', help: 'Scrolls horizontally when two or more real quotes are published. Pauses for hover, keyboard focus, touch interaction and reduced-motion preferences. Visitors can pause it.' },
     { key: 'eyebrow', label: 'Label', type: 'text' },
     { key: 'title', label: 'Headline', type: 'textarea', rows: 2 },
     { key: 'showRequestCard', label: 'Show invitation to share a testimonial', type: 'toggle', help: 'Keeps the section visible while you collect genuine recommendations.' },
@@ -395,7 +466,7 @@ const PROJECT_CARD = [
   { key: 'tags', label: 'Tags', type: 'tags' },
   { key: 'hook', label: 'Hook: one line that makes them click', type: 'textarea', wide: true, rows: 2, counter: [60, 140] },
   { key: 'summary', label: 'Summary', type: 'md', wide: true },
-  { key: 'cover', label: 'Cover image or video', type: 'media', wide: true },
+  { key: 'cover', label: 'Homepage cover image or video', help: 'Shown on the homepage project card. The case-study page uses its own Hero image setting.', type: 'media', wide: true },
   { key: 'featured', label: 'Feature as a homepage chapter', type: 'toggle', help: 'Published featured case studies form the main story in project-list order. Other case studies appear in More work.' },
   { type: 'section', title: 'Homepage story', help: 'These fields appear on featured case studies. Keep each paragraph focused on one idea.' },
   { key: 'storyTitle', label: 'Chapter headline', type: 'textarea', rows: 2, wide: true, help: ACCENT_HELP },
@@ -412,7 +483,7 @@ const PROJECT_CARD = [
 ];
 
 const PROJECT_DETAILS = [
-  { key: 'heroImage', label: 'Hero image', type: 'media', wide: true, help: 'Falls back to the cover image.' },
+  { key: 'heroImage', label: 'Case-study hero image', type: 'media', wide: true, help: 'Shown inside the case study. Clear this field to use the homepage cover automatically.' },
   { key: 'tools', label: 'Tools used on this project', type: 'tags', wide: true, help: 'Shown under the facts row. Keep it to the 3–5 tools that mattered here.' },
   { key: 'meta', label: 'Facts row', type: 'list', inline: true, wide: true, addLabel: 'Add fact', make: () => ({ label: '', value: '' }), fields: [{ key: 'label', label: 'Label', type: 'text', placeholder: 'Role' }, { key: 'value', label: 'Value', type: 'text' }], help: 'Role, team, timeline, platform, scope.' },
   { type: 'section', title: 'At a glance', help: 'Recruiters skim this first. One or two sentences each.' },
@@ -714,7 +785,7 @@ function pickMedia(kinds = ['image', 'video']) {
     const draw = async (force) => {
       grid.replaceChildren(h('div.empty', {}, 'Loading…'));
       const list = (await loadMedia(force)).filter((m) => kinds.includes(m.kind));
-      grid.replaceChildren(...(list.length ? list.map((m) => mediaCard(m, { pick: (url) => { finish(url); close(); } })) : [h('div.empty', {}, 'Nothing here yet — upload a file.')]));
+      grid.replaceChildren(...(list.length ? list.map((m) => mediaCard(m, { pick: (url) => { finish(url); close(); } })) : [h('div.empty', {}, 'Nothing here yet. upload a file.')]));
     };
     const up = h('input', { type: 'file', multiple: true, hidden: true, accept: kinds.includes('document') ? 'application/pdf' : 'image/*,video/mp4,video/webm', onchange: async (e) => {
       try { await uploadFiles(e.target.files); draw(true); } catch (err) { toast(err.message, 'error'); }
@@ -796,7 +867,7 @@ function dashboardView() {
   const done = checks.filter((x) => x[0]).length;
   const pct = Math.round((done / checks.length) * 100);
   return [
-    pageHead(`Hi, ${(c.site.name || '').split(' ')[0] || 'there'}.`, 'Edit anything, preview it, then press Publish. Every publish is backed up — you can roll back from History.'),
+    pageHead(`Hi, ${(c.site.name || '').split(' ')[0] || 'there'}.`, 'Edit anything, preview it, then press Publish. Every publish is backed up. you can roll back from History.'),
     h('div.dash', {},
       h('div.kpi', {}, h('strong', {}, published.filter((p) => p.kind === 'case-study').length), h('span', {}, 'Case studies live')),
       h('div.kpi', {}, h('strong', {}, published.filter((p) => p.kind === 'card').length), h('span', {}, 'Project cards live')),
@@ -985,7 +1056,8 @@ async function historyView() {
       if (!(await confirmBox('Restore this version?', `Your site will go back to “${b.label || `version ${b.rev}`}”. The current version stays in History, so you can undo this.${lose}`, 'Restore', 'btn-primary'))) return;
       try {
         const r = await api(`/backups/${encodeURIComponent(b.name)}/restore`, { method: 'POST' });
-        state.content = r.content; state.rev = r.rev; state.dirty = false;
+        clearDraft();
+        state.content = r.content; state.rev = r.rev; state.latestRev = r.rev; state.dirty = false;
         updateStatus(); toast('Restored.'); route(true);
       } catch (e) { toast(e.message, 'error'); }
     } }, 'Restore')))) : h('div.empty', {}, 'No earlier versions yet. Each publish keeps the previous version here.'));
@@ -1041,9 +1113,16 @@ async function boot() {
     const c = await api('/content');
     state.content = c;
     state.rev = c._rev || 0;
+    state.latestRev = state.rev;
+    try {
+      const saved = drafts.current(state.mode) || (drafts.list(state.mode).length === 1 ? drafts.list(state.mode)[0] : null);
+      if (saved) recoverDraft(saved);
+      else if (drafts.list(state.mode).length) showSavedDrafts();
+    } catch { toast('Could not recover saved drafts. Your stored drafts have not been deleted.', 'error'); }
   }
   $('#login').hidden = true;
   $('#app').hidden = false;
+  $('#publishTarget').textContent = state.mode === 'github' ? 'Connected to your live portfolio. Publish saves to GitHub.' : state.mode === 'local' ? 'Local editor: Publish updates this computer only. Use your live CMS to update the public portfolio.' : 'Publishing is not configured on this host.';
   updateStatus();
   route();
 }
@@ -1061,9 +1140,15 @@ $('#loginForm').addEventListener('submit', async (e) => {
 });
 
 $('#saveBtn').addEventListener('click', save);
+$('#savedDraftsBtn').addEventListener('click', showSavedDrafts);
+$('#discardDraftBtn').addEventListener('click', discardCurrentDraft);
 $('#previewBtn').addEventListener('click', () => preview(currentPreviewPath));
 $('#logoutBtn').addEventListener('click', async () => {
-  if (state.dirty && !(await confirmBox('Sign out?', 'You have unpublished changes. They will be lost.', 'Sign out anyway'))) return;
+  if (state.saving) return toast('Wait for publishing to finish before signing out.');
+  if (state.dirty) {
+    persistDraft();
+    if (!(await confirmBox('Sign out?', state.draftSaved ? 'Your unpublished draft is saved on this browser. Sign in again to continue editing.' : 'Autosave is unavailable. Signing out will lose your edits.', 'Sign out', 'btn-primary'))) return;
+  }
   await api('/logout', { method: 'POST' }).catch(() => {});
   state.content = null; state.dirty = false;
   showLogin();
@@ -1073,7 +1158,8 @@ addEventListener('hashchange', () => route());
 addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
 });
-addEventListener('beforeunload', (e) => { if (state.dirty) { e.preventDefault(); e.returnValue = ''; } });
+addEventListener('pagehide', persistDraft);
+addEventListener('beforeunload', (e) => { if (state.dirty) persistDraft(); if (state.dirty && !state.draftSaved) { e.preventDefault(); e.returnValue = ''; } });
 setInterval(() => { if (!state.dirty && !state.saving && state.content) updateStatus(); }, 30000);
 
 boot();

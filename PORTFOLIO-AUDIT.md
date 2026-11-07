@@ -59,3 +59,17 @@ Not checked: A populated Drive folder or an actual résumé document: the owner 
 - `npm test` passes 11 local/GitHub storage cases plus the editor and UI assertion suites. These cover restoration, failed writes, SHA conflicts, rejected credentials, retries and edits during publication without touching production data.
 
 Limits: This is a verified publish/refresh cycle, not a sustained-load or host-outage test. Local disk storage still requires one writer process. Original findings 3 and 4 remain open.
+
+
+## Draft recovery, horizontal motion and live content: 7 November 2026
+
+- Browser-local autosave runs on every edit and retains its original published revision. Refresh and closing/reopening the CMS restored a temporary intro-label edit without publishing it. The public page retained its original title; the test draft was discarded through the CMS and Saved drafts was then empty.
+- Separate/duplicated tabs, recovery, stale draft selection, blocked storage, failed publishes and edits during publication are covered by the draft-store/editor tests. Successful publication removes only the relevant draft.
+- The CMS now previews the current draft in an embedded portfolio view using the same renderer as the public pages. Browser verification showed the current cover and all three “Read case study” image labels. Cover and case-study hero fields are labelled separately.
+- Public routes read published GitHub content with a 30-second per-instance cache and shared in-flight request. Reads time out and fall back to the last available version; a late old read cannot roll back a newer save. Content changes no longer depend on deployment completion.
+- Testimonials use a horizontal scroll-snap track with swipe/keyboard navigation and automatic rotation, paused by interaction, hidden tabs or reduced motion. A temporary, unpublished second quote produced equal vertical positions, horizontal overflow and correct next-slide scrolling in the browser. Only the owner’s genuine quote remains published.
+- Count-ups were observed starting at 0K+, 0+, 0+ and ending exactly at 41K+, 250+, 6+. Unit checks cover formatting, ranges, visibility and reduced motion. Clickable controls use the native hand pointer; bridge links have transparent resting backgrounds.
+- Lead wording and explicit current team leadership appear in the hero/About. Render checks cover absence of em dashes across all published pages. Added bounded hero, section, button and disclosure motion.
+- Validation: 21 draft/local/GitHub test cases, editor assertions, UI/count-up assertions, and the nine-page export. No test testimonial or recovery marker was published.
+
+Limits: Drafts remain local to the current browser/device; clearing site storage removes them. Only one real quote is currently published, so automatic carousel movement requires a second. These checks are not a full assistive-technology certification or load test.

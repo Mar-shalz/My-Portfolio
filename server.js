@@ -193,10 +193,10 @@ const ctxFor = (content, base = '', preview = false) => ({ c: content, base, pre
 const html = (res, body, status = 200) => res.status(status).type('html').set('Cache-Control', 'no-cache').send(body);
 
 function sitePages(router, getCtx) {
-  router.get('/', (req, res) => html(res, renderer.home(getCtx(req))));
-  router.get('/about', (req, res) => html(res, renderer.about(getCtx(req))));
-  router.get('/work/:slug', (req, res) => {
-    const ctx = getCtx(req);
+  router.get('/', async (req, res) => html(res, renderer.home(await getCtx(req))));
+  router.get('/about', async (req, res) => html(res, renderer.about(await getCtx(req))));
+  router.get('/work/:slug', async (req, res) => {
+    const ctx = await getCtx(req);
     const p = ctx.c.projects.find((x) => x.slug === req.params.slug && x.kind === 'case-study' && (x.published || ctx.preview));
     if (!p) return html(res, renderer.notFound(ctx), 404);
     html(res, renderer.caseStudy(ctx, p));
@@ -204,18 +204,18 @@ function sitePages(router, getCtx) {
 }
 
 const site = express.Router();
-sitePages(site, () => ctxFor(store.read()));
+sitePages(site, async () => ctxFor(await store.published()));
 app.use('/', site);
 
 app.get('/robots.txt', (req, res) => res.type('text').send('User-agent: *\nDisallow: /admin\n'));
-app.get('/sitemap.xml', (req, res) => {
-  const c = store.read();
+app.get('/sitemap.xml', async (req, res) => {
+  const c = await store.published();
   const base = String(c.site.siteUrl || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
   const paths = ['/', '/about', ...c.projects.filter((p) => p.published && p.kind === 'case-study').map((p) => `/work/${p.slug}`)];
   res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths.map((p) => `<url><loc>${base}${p}</loc></url>`).join('')}</urlset>`);
 });
 
-app.use((req, res) => html(res, renderer.notFound(ctxFor(store.read())), 404));
+app.use(async (req, res) => html(res, renderer.notFound(ctxFor(await store.published())), 404));
 
 export default app;
 

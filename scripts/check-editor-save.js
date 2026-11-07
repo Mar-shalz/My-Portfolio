@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import { createDraftStore } from '../admin/drafts.js';
 
 // Run the shipped editor/API functions against delayed in-memory responses.
 // No server, portfolio file or backup is modified by these checks.
@@ -15,9 +16,14 @@ const code = [
 
 function setup() {
   const requests = [], messages = [], routes = [];
+  const entries = new Map();
+  const storage = { getItem: k => entries.get(k) ?? null, setItem: (k, v) => entries.set(k, v), removeItem: k => entries.delete(k), key: i => [...entries.keys()][i], get length() { return entries.size; } };
+  let id = 0;
+  const drafts = createDraftStore({ storage: () => storage, session: () => ({ getItem: () => null, setItem() {}, removeItem() {} }), id: () => String(++id) });
   const nodes = { '#status': {}, '#saveBtn': {} };
   let loginCount = 0;
   const context = vm.createContext({
+    drafts,
     $: selector => nodes[selector],
     toast: (message, type) => messages.push({ message, type }),
     route: keepScroll => routes.push(keepScroll),
@@ -30,13 +36,13 @@ function setup() {
   vm.runInContext(code, context);
   const editor = context.editor;
   editor.state.content = {
-    _rev: 4, updatedAt: '2026-01-01T00:00:00.000Z',
+    site: { name: 'Fixture' }, _rev: 4, updatedAt: '2026-01-01T00:00:00.000Z',
     home: { headline: 'Original headline' },
     projects: [{ id: 'first', slug: 'Original Slug', title: 'First project' }],
   };
   editor.state.rev = 4;
   editor.markDirty();
-  return { ...editor, requests, messages, routes, nodes, get loginCount() { return loginCount; } };
+  return { ...editor, drafts, storage, entries, requests, messages, routes, nodes, get loginCount() { return loginCount; } };
 }
 
 function reply(request, { status = 200, error, slugs = {} } = {}) {
@@ -69,6 +75,7 @@ function reply(request, { status = 200, error, slugs = {} } = {}) {
   assert.equal(draft.projects[0].slug, 'original-slug');
   assert.equal(e.state.dirty, false);
   assert.equal(e.state.saving, false);
+  assert.equal(e.entries.size, 0, 'Only a successful publish clears the saved draft');
   assert.equal(e.nodes['#saveBtn'].disabled, true);
   assert.equal(e.routes.length, 1);
   assert.equal(e.messages[0].message, 'Published. Your site is updated.');
@@ -91,8 +98,10 @@ function reply(request, { status = 200, error, slugs = {} } = {}) {
   assert.equal(e.state.content.projects[0].slug, 'original-slug');
   assert.equal(e.state.dirty, true);
   assert.equal(e.state.rev, 5);
+  assert.equal(e.drafts.current('local').rev, 5);
+  assert.equal(e.drafts.current('local').content.home.headline, 'Newer headline');
   assert.equal(e.nodes['#saveBtn'].disabled, false);
-  assert.equal(e.nodes['#status'].textContent, 'Unpublished changes');
+  assert.equal(e.nodes['#status'].textContent, 'Draft saved on this browser');
   assert.equal(e.routes.length, 0, 'The form must not rebuild while newer edits exist');
   assert.match(e.messages[0].message, /newer edits are still unpublished/);
   const next = e.save();
@@ -145,6 +154,8 @@ for (const failure of ['network', 409, 400, 401]) {
   await pending;
   assert.deepEqual(e.state.content, expected);
   assert.equal(e.state.rev, 4);
+  assert.equal(e.drafts.current('local').content.home.headline, 'Keep this draft');
+  assert.equal(e.drafts.current('local').rev, 4);
   assert.equal(e.state.dirty, true);
   assert.equal(e.state.saving, false);
   assert.equal(e.nodes['#saveBtn'].disabled, false);
@@ -180,3 +191,15 @@ for (const replacement of [null, { _rev: 20, projects: [], home: { headline: 'Re
 }
 
 console.log('Editor save checks passed: in-flight edits/slugs/project changes, repeat publishing, retries, conflicts, session expiry and replaced drafts. No real content was written.');
+
+// Storage failures cannot be announced as safely saved.
+{
+  const e = setup();
+  e.storage.setItem = () => { throw new Error('Quota exhausted'); };
+  e.state.content.home.headline = 'Not yet stored';
+  e.markDirty();
+  assert.equal(e.state.draftSaved, false);
+  assert.equal(e.nodes['#status'].textContent, 'Draft not saved on this browser');
+  assert.equal(e.drafts.current('local').content.home.headline, 'Original headline');
+  assert.match(e.messages[0].message, /Autosave could not/);
+}

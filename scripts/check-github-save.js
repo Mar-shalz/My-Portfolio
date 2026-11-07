@@ -13,7 +13,7 @@ function fixture(t) {
   const original = { _rev: 0, site: { name: 'Original' }, projects: [] };
   const file = path.join(dataDir, 'content.json');
   fs.writeFileSync(file, JSON.stringify(original));
-  const remote = { doc: structuredClone(original), sha: 'blob-0', commits: [], requests: [], failPut: null };
+  const remote = { doc: structuredClone(original), sha: 'blob-0', commits: [], requests: [], failPut: null, failGet: false, delayNextGet: null };
   const versions = new Map();
   function record() {
     const sha = String(remote.doc._rev + 1).padStart(40, '0');
@@ -31,11 +31,16 @@ function fixture(t) {
     if (url.pathname.endsWith('/commits')) return response(200, structuredClone(remote.commits));
     assert.equal(url.pathname, '/repos/fixture/portfolio/contents/data/content.json');
     if (options.method === 'GET') {
+      if (remote.failGet) throw new Error('Simulated read failure');
       const ref = url.searchParams.get('ref');
       const doc = ref === 'main' ? remote.doc : versions.get(ref);
       if (!doc) return response(404, {});
       const buf = Buffer.from(JSON.stringify(doc));
-      return response(200, { sha: remote.sha, size: buf.length, content: buf.toString('base64') });
+      const sha = remote.sha;
+      const delay = remote.delayNextGet;
+      remote.delayNextGet = null;
+      if (delay) await delay;
+      return response(200, { sha, size: buf.length, content: buf.toString('base64') });
     }
     assert.equal(options.method, 'PUT');
     assert.equal(body.branch, 'main');
@@ -124,3 +129,98 @@ for (const failure of ['network', 401, 403, 409, 422]) {
     assert.equal((await store.latest()).site.name, 'Unpublished edit');
   });
 }
+
+test('public reads fetch current GitHub content immediately, share an in-flight read and refresh after 30 seconds', async t => {
+  const { store, remote, file } = fixture(t);
+  let now = 1000;
+  t.mock.method(Date, 'now', () => now);
+  assert.equal(store.read().site.name, 'Original');
+  remote.doc = renamed(remote.doc, 'Current public content');
+  remote.doc._rev = 4;
+  let release;
+  remote.delayNextGet = new Promise(resolve => { release = resolve; });
+  const readers = [store.published(), store.published(), store.published()];
+  assert.equal(remote.requests.length, 1, 'Visitors must share one pending GitHub read');
+  release();
+  for (const doc of await Promise.all(readers)) {
+    assert.equal(doc.site.name, 'Current public content');
+    assert.equal(doc._rev, 4);
+  }
+  remote.doc = renamed(remote.doc, 'Newer public content');
+  remote.doc._rev = 5;
+  now += 29_999;
+  assert.equal((await store.published())._rev, 4);
+  assert.equal(remote.requests.length, 1);
+  now += 2;
+  assert.equal((await store.published()).site.name, 'Newer public content');
+  assert.equal(remote.requests.length, 2);
+  assert(remote.requests.every(r => r.method === 'GET'), 'Public reads must never write');
+  assert.equal(JSON.parse(fs.readFileSync(file))._rev, 0);
+});
+
+test('failed public reads use the bundle or last good content and retry after 30 seconds', async t => {
+  const { store, remote } = fixture(t);
+  let now = 1000;
+  t.mock.method(Date, 'now', () => now);
+  remote.doc = renamed(remote.doc, 'Current public content');
+  remote.doc._rev = 4;
+  remote.failGet = true;
+  assert.equal((await store.published()).site.name, 'Original');
+  assert.equal(remote.requests.length, 1);
+  remote.failGet = false;
+  now += 29_999;
+  assert.equal((await store.published()).site.name, 'Original');
+  assert.equal(remote.requests.length, 1, 'A failed read must not be retried on every visitor');
+  now += 2;
+  assert.equal((await store.published())._rev, 4);
+  assert.equal(remote.requests.length, 2);
+  remote.failGet = true;
+  now += 30_001;
+  assert.equal((await store.published())._rev, 4, 'An outage must not roll back to the older bundle');
+  assert.equal((await store.published())._rev, 4);
+  assert.equal(remote.requests.length, 3);
+  remote.failGet = false;
+  remote.doc._rev = 5;
+  now += 30_001;
+  assert.equal((await store.published())._rev, 5);
+  assert(remote.requests.every(r => r.method === 'GET'));
+});
+
+test('a successful save warms the public cache without a second GitHub fetch', async t => {
+  const { store, remote } = fixture(t);
+  let now = 1000;
+  t.mock.method(Date, 'now', () => now);
+  const saved = await store.save(renamed(store.read(), 'Just published'), 0);
+  const count = remote.requests.length;
+  remote.failGet = true;
+  assert.deepEqual(await store.published(), saved);
+  assert.equal(remote.requests.length, count);
+  now += 30_001;
+  assert.deepEqual(await store.published(), saved);
+  assert.equal(remote.requests.length, count + 1);
+});
+
+test('an old public read completing after a save cannot roll the saved revision back', async t => {
+  const { store, remote } = fixture(t);
+  const draft = renamed(store.read(), 'Newly saved winner');
+  let release;
+  remote.delayNextGet = new Promise(resolve => { release = resolve; });
+  const pending = store.published();
+  const saved = await store.save(draft, 0);
+  assert.equal(saved._rev, 1);
+  release();
+  assert.deepEqual(await pending, saved);
+  assert.deepEqual(await store.published(), saved);
+  assert.deepEqual(store.read(), saved);
+  assert.equal(remote.doc.site.name, 'Newly saved winner');
+});
+
+test('local and read-only public reads use their existing content without GitHub access', async t => {
+  const { file, remote } = fixture(t);
+  const dataDir = path.dirname(file);
+  for (const readOnly of [false, true]) {
+    const store = createStore({ dataDir, bundledDir: dataDir, readOnly });
+    assert.deepEqual(await store.published(), store.read());
+  }
+  assert.equal(remote.requests.length, 0);
+});

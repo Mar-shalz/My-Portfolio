@@ -2,6 +2,7 @@
 (() => {
   const d = document;
   const html = d.documentElement;
+  const pageLocation = new URL(d.baseURI);
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 
   // Neutralize the previous animation boot state, including on cached pages.
@@ -61,8 +62,8 @@
       if (!link) return;
       setMenu(false);
       // Keep native hash navigation, and move assistive-technology focus with it.
-      const url = new URL(link.href, location.href);
-      if (url.origin === location.origin && url.pathname === location.pathname && url.hash) {
+      const url = new URL(link.href, d.baseURI);
+      if (url.origin === pageLocation.origin && url.pathname === pageLocation.pathname && url.hash) {
         let target;
         try { target = d.getElementById(decodeURIComponent(url.hash.slice(1))); } catch {}
         if (target) requestAnimationFrame(() => {
@@ -145,9 +146,9 @@
   const stories = [...d.querySelectorAll('.story-project[id]')];
   const storyLinks = [...d.querySelectorAll('.story-index a[href]')].flatMap((link) => {
     try {
-      const url = new URL(link.href, location.href);
+      const url = new URL(link.href, d.baseURI);
       const id = decodeURIComponent(url.hash.slice(1));
-      if (url.origin !== location.origin || url.pathname !== location.pathname || !stories.some((story) => story.id === id)) return [];
+      if (url.origin !== pageLocation.origin || url.pathname !== pageLocation.pathname || !stories.some((story) => story.id === id)) return [];
       return [{ link, id }];
     } catch { return []; }
   });
@@ -221,6 +222,10 @@
     animation.finished.then(() => animations.delete(animation), () => animations.delete(animation));
     return animation;
   }
+
+  if (scrollY < 50) d.querySelectorAll('.hero-type > span, .hero-lead, .hero-actions').forEach((el, index) => {
+    animate(el, [{ opacity: .25, transform: 'translateY(24px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 650, delay: index * 70, fill: 'backwards' });
+  });
 
   // Fine-pointer flourishes are small and never displace the interaction target.
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
@@ -297,7 +302,7 @@
         const source = trigger.dataset.src || trigger.querySelector('img')?.currentSrc;
         if (!source) return;
         let url;
-        try { url = new URL(source, location.href); } catch { return; }
+        try { url = new URL(source, d.baseURI); } catch { return; }
         if (!['http:', 'https:'].includes(url.protocol)) return;
         event.preventDefault();
         if (typeof dialog.showModal !== 'function') { location.assign(url.href); return; }
@@ -337,14 +342,19 @@
   d.querySelectorAll('[data-testimonial-carousel]').forEach((carousel) => {
     const slides = [...carousel.querySelectorAll('[data-testimonial-slide]')];
     if (slides.length < 2) return;
+    const track = carousel.querySelector('.testimonial-slides');
     const previous = carousel.querySelector('[data-carousel-prev]');
     const next = carousel.querySelector('[data-carousel-next]');
     const toggle = carousel.querySelector('[data-carousel-toggle]');
     const status = carousel.querySelector('[data-carousel-status]');
-    let index = 0, timer, hovered = false, toggleIntent;
+    let index = 0, timer, scrollTimer, hovered = false, toggleIntent;
     let paused = carousel.dataset.autoplay === 'false' || motionPreference.matches;
     carousel.classList.add('is-ready');
     carousel.querySelector('[data-carousel-controls]').hidden = false;
+    track.setAttribute('tabindex', '0');
+    track.setAttribute('aria-label', 'Testimonial slides. Use left and right arrow keys to navigate.');
+    const positionOf = i => Math.max(0, Math.min(slides[i].offsetLeft - slides[0].offsetLeft, track.scrollWidth - track.clientWidth));
+    const announce = () => { status.textContent = `${index + 1} / ${slides.length}`; };
     const sync = () => {
       clearTimeout(timer);
       const playing = !paused && !hovered && !d.hidden && !motionPreference.matches;
@@ -357,14 +367,30 @@
     const show = (position, manual = false) => {
       index = (position + slides.length) % slides.length;
       if (manual) paused = true;
-      slides.forEach((slide, i) => { slide.hidden = i !== index; });
       status.setAttribute('aria-live', manual ? 'polite' : 'off');
-      status.textContent = `${index + 1} / ${slides.length}`;
-      animate(slides[index], [{ transform: 'translateX(22px)' }, { transform: 'translateX(0)' }]);
+      announce();
+      track.scrollTo({ left: positionOf(index), behavior: motionPreference.matches ? 'instant' : 'smooth' });
       sync();
     };
+    const pause = () => { paused = true; sync(); };
     previous.addEventListener('click', () => show(index - 1, true));
     next.addEventListener('click', () => show(index + 1, true));
+    track.addEventListener('pointerdown', pause, { passive: true });
+    track.addEventListener('wheel', pause, { passive: true });
+    track.addEventListener('keydown', (event) => {
+      if (event.target !== track || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      show(index + (event.key === 'ArrowRight' ? 1 : -1), true);
+    });
+    // Swipes and native keyboard scrolling must keep the controls on the visible quote.
+    track.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        index = slides.reduce((closest, _, i) => Math.abs(positionOf(i) - track.scrollLeft) < Math.abs(positionOf(closest) - track.scrollLeft) ? i : closest, 0);
+        status.setAttribute('aria-live', paused ? 'polite' : 'off');
+        announce();
+      }, 120);
+    }, { passive: true });
     // Capture a mouse click's intent before focus pauses the carousel.
     toggle.addEventListener('pointerdown', () => { toggleIntent = !paused; });
     toggle.addEventListener('pointercancel', () => { toggleIntent = undefined; });
@@ -376,13 +402,14 @@
     });
     carousel.addEventListener('pointerenter', () => { hovered = true; sync(); });
     carousel.addEventListener('pointerleave', () => { hovered = false; sync(); });
-    carousel.addEventListener('focusin', () => { paused = true; sync(); });
+    carousel.addEventListener('focusin', pause);
     d.addEventListener('visibilitychange', sync);
     motionPreference.addEventListener('change', () => {
-      if (motionPreference.matches) paused = true;
+      if (motionPreference.matches) { paused = true; track.scrollTo({ left: positionOf(index), behavior: 'instant' }); }
       sync();
     });
-    show(0);
+    announce();
+    sync();
   });
 
   const resumeDialog = d.getElementById('resume-dialog');
@@ -393,8 +420,8 @@
     d.querySelectorAll('[data-resume-preview]').forEach((trigger) => trigger.addEventListener('click', (event) => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       let url;
-      try { url = new URL(trigger.dataset.resumeSrc, location.href); } catch { return; }
-      if (url.protocol !== 'https:' && !(url.origin === location.origin && url.protocol === 'http:')) return;
+      try { url = new URL(trigger.dataset.resumeSrc, d.baseURI); } catch { return; }
+      if (url.protocol !== 'https:' && !(url.origin === pageLocation.origin && url.protocol === 'http:')) return;
       event.preventDefault();
       returnFocus = trigger;
       frame.src = url.href;
@@ -412,6 +439,48 @@
     });
   }
 
+  // Count only single numeric values; ranges and prose keep their exact original text.
+  const counting = new Map();
+  let countObserver;
+  function countUp(el) {
+    const original = el.textContent;
+    const parts = original.match(/^([^\d+-]*)([+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?)([^\d]*)$/);
+    if (!parts) return;
+    const [, prefix, number, suffix] = parts;
+    const target = Number(number.replaceAll(',', ''));
+    if (!Number.isFinite(target) || target === 0) return;
+    const decimals = number.split('.')[1]?.length || 0;
+    const format = value => {
+      let text = value.toFixed(decimals);
+      if (number.includes(',')) { const chunks = text.split('.'); chunks[0] = chunks[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); text = chunks.join('.'); }
+      return prefix + (number.startsWith('+') ? '+' : '') + text + suffix;
+    };
+    el.setAttribute('aria-label', original);
+    const run = { original, frame: 0, start: null };
+    counting.set(el, run);
+    const tick = time => {
+      run.start ??= time;
+      const progress = Math.min(1, (time - run.start) / 1150);
+      el.textContent = progress === 1 ? original : format(target * (1 - (1 - progress) ** 3));
+      if (progress < 1) run.frame = requestAnimationFrame(tick);
+      else counting.delete(el);
+    };
+    run.frame = requestAnimationFrame(tick);
+  }
+  function finishCounts() {
+    counting.forEach(({ original, frame }, el) => { cancelAnimationFrame(frame); el.textContent = original; });
+    counting.clear();
+  }
+  if (!motionPreference.matches && 'IntersectionObserver' in window) {
+    countObserver = new IntersectionObserver(entries => entries.forEach(({ isIntersecting, target }) => {
+      if (!isIntersecting) return;
+      countObserver.unobserve(target);
+      countUp(target);
+    }), { threshold: .5 });
+    d.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+  }
+  d.addEventListener('visibilitychange', () => { if (d.hidden) finishCounts(); });
+
   let revealObserver;
   if (!motionPreference.matches && 'IntersectionObserver' in window) {
     revealObserver = new IntersectionObserver((entries) => {
@@ -419,8 +488,8 @@
       visible.forEach(({ target }, index) => {
         revealObserver.unobserve(target);
         animate(target, [
-          { transform: 'translate3d(0, 12px, 0)' },
-          { transform: 'translate3d(0, 0, 0)' },
+          { opacity: .35, transform: 'translate3d(0, 24px, 0)' },
+          { opacity: 1, transform: 'translate3d(0, 0, 0)' },
         ], { delay: Math.min(index * 35, 105), fill: 'backwards' });
       });
     }, { threshold: .08, rootMargin: '0px 0px -24px 0px' });
@@ -436,6 +505,8 @@
     scheduleScroll();
     if (!matches) return;
     revealObserver?.disconnect();
+    countObserver?.disconnect();
+    finishCounts();
     animations.forEach((animation) => animation.cancel());
     animations.clear();
     pointerResets.forEach((reset) => reset());
