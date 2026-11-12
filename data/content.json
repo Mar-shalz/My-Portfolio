@@ -1,6 +1,6 @@
 {
-  "_rev": 29,
-  "updatedAt": "2026-11-12T16:39:15.961Z",
+  "_rev": 30,
+  "updatedAt": "2026-11-12T16:40:17.502Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1625,7 +1625,7 @@
         "avatar": ""
       },
       {
-        "published": false,
+        "published": true,
         "quote": "Victor is an excellent team member who takes ownership of tasks from initiation through to completion, requiring minimal supervision until they are ready for review.",
         "name": "Damilola Agboluaje",
         "role": "Product Manager",
@@ -1636,7 +1636,7 @@
     "requestTitle": "Worked with me?",
     "requestText": "I'd love to hear how it went. A few honest words about working together help me more than anything on this page.",
     "requestCta": "Share a testimonial",
-    "showRequestCard": true,
+    "showRequestCard": false,
     "autoplay": true
   },
   "about": {
