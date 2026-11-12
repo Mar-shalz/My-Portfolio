@@ -1,6 +1,6 @@
 {
-  "_rev": 33,
-  "updatedAt": "2026-11-12T17:13:49.902Z",
+  "_rev": 34,
+  "updatedAt": "2026-11-12T18:54:11.525Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -765,6 +765,12 @@
           "eyebrow": "Implementation",
           "heading": "AI-assisted code. *My responsibility.*",
           "body": "I used AI to develop the entire website. I own the implementation work, while selected design sections were delegated to a designer working under my direction. The presentation mockup above uses captures of the live site; the original captures are shown here."
+        },
+        {
+          "type": "text",
+          "eyebrow": "Reflection",
+          "heading": "*Reflection*",
+          "body": "### Reflection — What I Learned\n\nWorking on Chopbaze reinforced that designing a website goes beyond making a product visually appealing. The bigger challenge was translating a growing business idea into a clear, understandable experience for people encountering the brand for the first time.\n\nAs both a co-founder and design lead, I had to think beyond individual screens, balancing business objectives, user expectations, content clarity, and visual consistency. Delegating parts of the design also taught me that leadership isn't about designing everything yourself, but about providing direction and ensuring every contribution supports a shared vision.\n\nBuilding the website with AI-assisted development expanded my understanding of the relationship between design and implementation. AI accelerated execution, but making decisions about the experience, reviewing the output, and taking responsibility for quality remained my job.\n\n**My biggest takeaway:** Good design is not measured by how much you create, but by how effectively you communicate what matters. The next step is validating that clarity with real customers and vendors, rather than assuming that a polished, launched website automatically communicates the right message."
         }
       ],
       "tools": [
