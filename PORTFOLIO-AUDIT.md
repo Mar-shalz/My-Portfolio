@@ -75,3 +75,31 @@ Limits: This is a verified publish/refresh cycle, not a sustained-load or host-o
 Limits: Drafts remain local to the current browser/device; clearing site storage removes them. Only one real quote is currently published, so automatic carousel movement requires a second. These checks are not a full assistive-technology certification or load test.
 
 Production follow-through: code commit `3395fd1` deployed successfully. In the live CMS, a temporary intro-label draft survived both reload and closing/reopening; it did not appear on the public site. The embedded preview showed the current uploaded Mobile Banking cover (`mobile-0750e2.jpg`) and all three “Read case study” labels. The temporary draft was discarded. A real Publish then updated the contact copy to include “Product Design and UI/UX”, creating version 25 (`e8b64f8`). The refreshed public page displayed that exact text. A full-document comparison against version 24 found only this intended text edit and revision/timestamp changes. Vercel reported success for both commits. No sample testimonial or test marker was published.
+
+## Accessibility and presentation: 12 November 2026
+
+Scope: public home, About and all six published case studies; CMS dashboard, Home, About, Method, Testimonials, Site settings, Media, History, Projects and the case-study editor. Checked light and dark themes with rendered text contrast measurements, mobile reflow and keyboard interaction. This is an engineering audit, not a WCAG certification.
+
+Fixed:
+- CMS disclosure headers and media choices were mouse-only. They are now native buttons; disclosures expose their expanded state and retain focus after toggling.
+- Project ordering previously required dragging. Named up/down buttons now use the same bounded reorder operation, preserving project objects and restoring focus. Covered by editor assertions.
+- CMS dialogs now use native modal dialogs, making the underlying page inert and supporting Escape and focus restoration.
+- The off-screen CMS mobile sidebar remained keyboard reachable. Closed navigation is now hidden; menu state is announced and Escape returns focus.
+- CMS dark-theme monogram, inline formatting hints and tag removal buttons failed contrast. Corrected their colors. Project initials now use a dependable contrasting background rather than arbitrary project accent colors.
+- List action controls overflowed at 320px. Actions wrap onto a second row, grid tracks can shrink and labels can wrap. Increased small action targets, improved input boundaries and toggle contrast.
+- Portfolio defaults to light and uses a split-panel appearance icon. Explicit visitor theme choices persist. CMS has matching light/dark appearance support.
+
+Verification:
+- No measured text contrast failures remained across the eight public pages in both themes. Checked normal text against 4.5:1 and large text against 3:1, with ancestor background composition. Image content and complex composited backgrounds also require human judgment.
+- No document-width overflow on those public pages at 320px. CMS sections were checked in both themes; identified narrow list overflows were fixed and rechecked. Desktop, 390px and 320px views were inspected during the audit.
+- Keyboard checks covered mobile navigation open/close and focus restoration, CMS disclosure activation with Enter, media selection controls, native modal state, Escape dismissal and return to the invoking control.
+- Existing automated checks cover carousel keyboard/swipe/autoplay/pause, reduced-motion changes, count-up formatting, CMS draft recovery, publish failures and concurrent writes. All pass. No audit fixtures were published.
+
+Presentation:
+- Chopbaze is the fourth featured case study, with the owner's clarified design leadership and sole AI-assisted development contribution. Captures from the current live site show both the home and gatherings sections.
+- Five new AI-assisted presentation mockups use supplied UI: E-Token, Internet Banking, Chopbaze, Evamor and a supplementary Fast Credit Mobile showcase. Original UI evidence remains in the case studies and original uploaded files remain available.
+- All new covers, hero images and content images use existing CMS media fields. Optimized JPEG assets keep each new showcase below 600KB. Original generated PNGs remain in the local generation folder.
+- Horizontal testimonial cards use smaller quotes and larger attribution. More than one published quote enables rotation; only one approved quote is currently published.
+- Subtle pointer-responsive depth reuses the existing bounded motion helper. It is disabled for touch/coarse pointers and reduced-motion preferences.
+
+Limits: No physical-device or screen-reader certification. Drafts remain browser/device-local. AI mockups are presentation imagery; original screenshots remain the authoritative interface evidence. The résumé folder and portrait still require the owner's files.

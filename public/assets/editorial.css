@@ -187,3 +187,18 @@ html.resume-open{overflow:hidden}
 .icon-btn:active .ic{transform:scale(.88)}
 .story-cover-link:active>img{transform:scale(.985)}
 @media(prefers-reduced-motion:no-preference){.supporting-project:is(:hover,:focus-visible) .supporting-image{box-shadow:0 12px 26px #102d2925}.method-item[open] .method-answer,.studio-item[open] .studio-detail{animation:detail-in .3s var(--ease)}@keyframes detail-in{from{transform:translateY(-7px)}to{transform:translateY(0)}}}
+
+/* Compact horizontal recommendations, with readable attribution. */
+.testimonial-slides>.tq{flex-basis:calc(62% - 12px);min-height:260px;padding:32px;gap:22px}
+.testimonial-slides>.tq:only-child{flex-basis:72%;max-width:820px}
+.testimonial-carousel .tq blockquote{font-size:20px;line-height:1.65}
+.testimonial-carousel .tq figcaption strong{font-size:18px}
+.testimonial-carousel .tq figcaption span span{font-size:16px;margin-top:5px}
+@media(max-width:700px){.testimonial-slides>.tq,.testimonial-slides>.tq:only-child{flex-basis:88%;padding:24px}.testimonial-carousel .tq blockquote{font-size:18px}.story-index{grid-template-columns:repeat(2,minmax(0,1fr))}}
+:where(a,button,input,textarea,select,summary):focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .story-cover-link>img{transform:perspective(1000px) rotateX(var(--art-rx,0deg)) rotateY(var(--art-ry,0deg));transition:transform .25s var(--ease),box-shadow .3s var(--ease)}
+  .story-cover-link:hover>img{transform:perspective(1000px) rotateX(var(--art-rx,0deg)) rotateY(var(--art-ry,0deg)) translateY(-4px);box-shadow:0 22px 42px #102d2933}
+}

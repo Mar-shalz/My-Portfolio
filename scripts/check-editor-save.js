@@ -203,3 +203,22 @@ console.log('Editor save checks passed: in-flight edits/slugs/project changes, r
   assert.equal(e.drafts.current('local').content.home.headline, 'Original headline');
   assert.match(e.messages[0].message, /Autosave could not/);
 }
+
+// Keyboard and drag ordering share one bounded operation and retain the whole project object.
+{
+  const arr = [{ id: 'a', blocks: ['keep'] }, { id: 'b' }, { id: 'c' }];
+  let changes = 0, draws = 0, focused;
+  const list = { children: arr.map((_, i) => ({ querySelector: () => ({ focus() { focused = i; } }) })) };
+  const start = source.indexOf('  const moveProject =');
+  const end = source.indexOf('  const draw =', start);
+  const context = vm.createContext({ arr, list, markDirty() { changes++; }, draw() { draws++; } });
+  vm.runInContext(source.slice(start, end) + '\nglobalThis.move = moveProject;', context);
+  context.move(0, 1);
+  assert.deepEqual(arr.map(p => p.id), ['b', 'a', 'c']);
+  assert.deepEqual(arr[1].blocks, ['keep']);
+  assert.equal(focused, 1);
+  context.move(1, 0);
+  assert.deepEqual(arr.map(p => p.id), ['a', 'b', 'c']);
+  context.move(0, -1); context.move(2, 3); context.move(1, 1);
+  assert.equal(changes, 2); assert.equal(draws, 2);
+}

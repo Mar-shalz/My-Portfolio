@@ -1,6 +1,6 @@
 {
-  "_rev": 26,
-  "updatedAt": "2026-11-07T09:25:41.314Z",
+  "_rev": 27,
+  "updatedAt": "2026-11-12T16:25:38.409Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -78,7 +78,7 @@
   "work": {
     "eyebrow": "01 / Selected work",
     "title": "From first product\nto *connected experiences.*",
-    "intro": "The story starts with Fast Credit’s first mobile app, bringing manual services into a digital channel. It continues with the company’s first Internet Banking and E-Token products, where I guide the design team and own a connected experience end to end.",
+    "intro": "From Fast Credit’s first mobile app to connected web banking and authentication, then into food commerce with Chopbaze. Four projects showing how I lead designers, shape product journeys and bring ideas into working experiences.",
     "otherEyebrow": "A different context",
     "otherTitle": "The same care,\n*beyond the banking app.*",
     "otherIntro": "Website projects exploring how structure and visual design help people find what they need.",
@@ -171,6 +171,14 @@
           "body": "The implemented app brought new customers to Fast Credit through a digital channel. Its Data Analytics Team reported 41K+ total registered accounts as of November 2026.",
           "label": "Contribution and measurement",
           "text": "Design contributed to making this digital channel usable and accessible as part of the wider product and implementation effort. The account total includes different KYC and activation stages, rather than only fully onboarded or active customers. A quantitative growth lift attributable to design alone has not been established."
+        },
+        {
+          "type": "image",
+          "eyebrow": "Product showcase",
+          "heading": "Everyday finance. *One connected product.*",
+          "src": "/uploads/mobile-showcase.jpg",
+          "caption": "AI-assisted presentation of the supplied login and investment designs. Original interface screens appear below.",
+          "wide": true
         },
         {
           "type": "text",
@@ -415,7 +423,7 @@
       "accent": "#029247",
       "hook": "Leading Fast Credit’s first internet-banking platform, extending the mobile experience to customers using a browser.",
       "summary": "Fast Credit’s first internet-banking platform is the web counterpart of its mobile app, designed so customers can transact without downloading an app. As Design Lead, I assign modules, review the team’s work and coordinate feedback and alignment. The platform remains in development, with launch planned alongside E-Token for login and transaction authorization.",
-      "cover": "",
+      "cover": "/uploads/banking-showcase.jpg",
       "stats": [],
       "links": [],
       "meta": [
@@ -446,6 +454,22 @@
           "eyebrow": "The context",
           "heading": "The mobile experience, *extended to the browser.*",
           "body": "Fast Credit’s first internet-banking platform is the web counterpart of its mobile app. It is designed so customers can transact through a browser without downloading the mobile app.\n\nMy role is Design Lead: assigning modules, reviewing the team’s design work and coordinating feedback and alignment. The platform is in development, with launch planned alongside the company’s first [E-Token product](/work/fast-credit-etoken) for login and transaction authorization."
+        },
+        {
+          "type": "gallery",
+          "eyebrow": "Interface design",
+          "heading": "The experience, *screen by screen.*",
+          "body": "Original design screens. The cover is an AI-assisted presentation mockup of this work.",
+          "images": [
+            {
+              "src": "/uploads/banking-dashboard.jpg",
+              "label": "Account overview and quick actions"
+            },
+            {
+              "src": "/uploads/banking-bills.jpg",
+              "label": "Data recharge and payment details"
+            }
+          ]
         },
         {
           "type": "cards",
@@ -489,12 +513,6 @@
         },
         {
           "type": "text",
-          "eyebrow": "Visual documentation",
-          "heading": "Team work, *documented as it progresses.*",
-          "body": "Interface screenshots and module-level examples have not yet been added to the portfolio. The project illustration is a labelled placeholder, not a representation of implemented banking screens."
-        },
-        {
-          "type": "text",
           "eyebrow": "Reflection",
           "heading": "Leadership makes room *for other designers’ work.*",
           "body": "This project shows a different part of my practice: guiding a team, reviewing its output and keeping feedback coordinated. The case study will develop as the product moves through implementation and release."
@@ -508,7 +526,7 @@
       "featured": true,
       "art": "banking",
       "client": "Fast Credit Limited",
-      "heroImage": "",
+      "heroImage": "/uploads/banking-showcase.jpg",
       "storyTitle": "Bring the *banking experience* to the *web.*",
       "storyContext": "The company’s first internet-banking platform extends mobile banking into a browser, without an app download.",
       "storyContribution": "As Design Lead, I assign modules, review the team’s designs and coordinate feedback across the shared experience.",
@@ -537,8 +555,8 @@
       "accent": "#28746C",
       "hook": "Designing Fast Credit’s first E-Token product end to end, supporting Internet Banking authentication and transaction authorization.",
       "summary": "Fast Credit’s first E-Token product supports sign-in and transaction authorization for Internet Banking. I own its product design end to end. Engineering has implemented it, and it is in TestFlight QA and internal testing ahead of a coordinated public launch.",
-      "cover": "",
-      "heroImage": "",
+      "cover": "/uploads/etoken-showcase.jpg",
+      "heroImage": "/uploads/etoken-showcase.jpg",
       "stats": [],
       "meta": [
         {
@@ -574,6 +592,22 @@
           "eyebrow": "The context",
           "heading": "Fast Credit’s first E-Token. *Part of a connected journey.*",
           "body": "This is Fast Credit’s first E-Token product, designed to support login and transaction authorization for the company’s first [Internet Banking platform](/work/fast-credit-internet-banking). The two products are planned to launch together.\n\nI owned E-Token’s product design end to end and worked with engineering through implementation. The app remains in TestFlight QA and internal testing, ahead of public release."
+        },
+        {
+          "type": "gallery",
+          "eyebrow": "Interface design",
+          "heading": "The experience, *screen by screen.*",
+          "body": "Original design screens. The cover is an AI-assisted presentation mockup of this work.",
+          "images": [
+            {
+              "src": "/uploads/etoken-activation.jpg",
+              "label": "Activate an E-Token"
+            },
+            {
+              "src": "/uploads/etoken-accounts.jpg",
+              "label": "Choose the account to authorize"
+            }
+          ]
         },
         {
           "type": "cards",
@@ -630,12 +664,6 @@
         },
         {
           "type": "text",
-          "eyebrow": "Visual documentation",
-          "heading": "Interface documentation *to follow.*",
-          "body": "Product screenshots have not yet been added to this portfolio. The project illustration is a labelled placeholder and does not depict the implemented interface."
-        },
-        {
-          "type": "text",
           "eyebrow": "Reflection",
           "heading": "The handoff is part of *a longer collaboration.*",
           "body": "This project brings together my individual design ownership and work with engineering on an implemented product. The next evidence will come from completing internal review and, after release, observing how the connected experience performs."
@@ -654,7 +682,7 @@
       "slug": "chopbaze-website",
       "published": true,
       "kind": "case-study",
-      "featured": false,
+      "featured": true,
       "title": "Chopbaze *Website.*",
       "shortTitle": "Chopbaze Website",
       "client": "Chopbaze",
@@ -667,20 +695,20 @@
         "Foodtech"
       ],
       "accent": "#E0A100",
-      "hook": "A public home for Chopbaze, designed by me and brought to life with AI-assisted coding.",
-      "summary": "I designed and coded the Chopbaze website with AI assistance. The live site introduces the bulk-food marketplace, extending my work as co-founder from product design into website implementation.",
-      "cover": "/uploads/chopbaze-website.jpg",
-      "heroImage": "/uploads/chopbaze-website.jpg",
+      "hook": "Design leadership and hands-on AI-assisted development for a food marketplace.",
+      "summary": "I lead the design, delegate selected sections and review the work. All AI-assisted website development is mine.",
+      "cover": "/uploads/chopbaze-showcase.jpg",
+      "heroImage": "/uploads/chopbaze-showcase.jpg",
       "coverFit": "contain",
       "stats": [],
       "meta": [
         {
           "label": "Role",
-          "value": "Product designer & AI-assisted developer"
+          "value": "Lead Designer & AI-assisted developer"
         },
         {
           "label": "Ownership",
-          "value": "Website design and implementation"
+          "value": "Design direction; all website development"
         },
         {
           "label": "Platform",
@@ -699,49 +727,48 @@
       ],
       "glance": {
         "problem": "Give Chopbaze’s bulk-food marketplace a public website that communicates the idea to prospective buyers and vendors.",
-        "solution": "I designed the website and implemented it with AI-assisted coding, carrying the work from design into a live site.",
-        "impact": "A live website at chopbaze.com, with the marketplace app presented as coming soon and a waitlist for interested customers."
+        "solution": "I lead the design, delegate selected sections and review the work. All AI-assisted website development is mine.",
+        "impact": "A live public website introducing the food offer and connecting customers and vendors to the product."
       },
       "blocks": [
         {
           "type": "text",
-          "eyebrow": "The context",
-          "heading": "Make the marketplace idea *easy to understand.*",
-          "body": "Chopbaze connects people planning shared meals with bulk-food vendors. The website introduces the offer through familiar occasions: office lunches, family gatherings and larger events.\n\nAs co-founder, my product work spans the buyer experience and vendor tooling. I designed and implemented the website to give that broader product a public home while the marketplace continues through testing."
+          "eyebrow": "Ownership",
+          "heading": "Lead the design. *Build the website.*",
+          "body": "I lead the design, delegate selected sections and review the work. All AI-assisted website development is mine."
         },
         {
-          "type": "cards",
-          "eyebrow": "My contribution",
-          "heading": "From website design *to working code.*",
-          "style": "neutral",
-          "columns": 2,
-          "items": [
-            {
-              "label": "Website design",
-              "body": "I designed a path from the bulk-order proposition into food packages, how ordering works and a clear invitation to join the waitlist."
-            },
-            {
-              "label": "AI-assisted implementation",
-              "body": "I coded the website with AI assistance and took the design through to a live implementation."
-            }
-          ]
-        },
-        {
-          "type": "callout",
-          "eyebrow": "Current status",
-          "heading": "The website *is live.*",
-          "body": "The implemented website can be explored at [chopbaze.com](https://chopbaze.com).",
-          "label": "Website and product are at different stages",
-          "text": "The public website is available to explore today. The marketplace app is presented as coming soon, with a waitlist connecting the website to the next stage of the product."
+          "type": "image",
+          "eyebrow": "The public experience",
+          "heading": "Start with the occasion, *then explain the offer.*",
+          "src": "/uploads/chopbaze-live-home.jpg",
+          "caption": "Live homepage captured 12 November 2026."
         },
         {
           "type": "text",
-          "eyebrow": "Reflection",
-          "heading": "Carry the design *through implementation.*",
-          "body": "This project shows how AI-assisted coding extends my hands-on design practice. I took responsibility for both the website’s design and its implementation, following the work beyond the design file into a live experience."
+          "eyebrow": "Beyond the hero",
+          "heading": "Make the next step *easy to understand.*",
+          "body": "The site presents food categories and portion sizes, a four-step ordering explanation, and customer controls such as preparation preferences and scheduling. A vendor section explains the partner proposition. Gathering examples connect the service to real occasions."
+        },
+        {
+          "type": "image",
+          "heading": "Design for *shared occasions.*",
+          "src": "/uploads/chopbaze-live-gatherings.jpg",
+          "caption": "The gatherings section of the live website."
+        },
+        {
+          "type": "text",
+          "eyebrow": "Implementation",
+          "heading": "AI-assisted code. *My responsibility.*",
+          "body": "I used AI to develop the entire website. I own the implementation work, while selected design sections were delegated to a designer working under my direction. The presentation mockup above uses captures of the live site; the original captures are shown here."
         }
       ],
-      "tools": []
+      "tools": [],
+      "storyTitle": "A shared table. *A digital experience.*",
+      "storyContext": "Leading the website design and personally developing the complete site with AI assistance.",
+      "storyContribution": "I lead the design, delegate selected sections and review the work. All AI-assisted website development is mine.",
+      "storyOutcome": "Live at Chopbaze.com, introducing the food offer, ordering journey, customer controls and vendor partnership.",
+      "storyNext": "Different products. The same care in how they become real."
     },
     {
       "id": "fast-credit-website",
@@ -932,8 +959,8 @@
       "accent": "#124D91",
       "hook": "A responsive commerce redesign centred on finding the product and placing an order.",
       "summary": "Evamor supplies dispenser water to homes, offices, hotels and restaurants across Lagos. I redesigned the website around product discovery and ordering, with revised navigation, responsive layouts and a clearer order form.",
-      "cover": "/uploads/evamor-cover.jpg",
-      "heroImage": "/uploads/evamor-hero.jpg",
+      "cover": "/uploads/evamor-showcase.jpg",
+      "heroImage": "/uploads/evamor-showcase.jpg",
       "stats": [
         {
           "value": "Web",

@@ -215,18 +215,16 @@ async function uploadFiles(files) {
 /* ============================================================ modal */
 
 function modal({ title, body, actions = [], wide = false, onClose }) {
+  const previous = document.activeElement;
   const root = $('#modalRoot');
-  const close = () => { bg.remove(); document.removeEventListener('keydown', esc); onClose?.(); };
-  const esc = (e) => { if (e.key === 'Escape') close(); };
-  const bg = h('div.modal-bg', { onclick: (e) => { if (e.target === bg) close(); } },
-    h(`div.modal${wide ? '.is-wide' : ''}`, { role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
-      h('div.modal-head', {}, h('h2', {}, title), h('button.icon-btn', { type: 'button', 'aria-label': 'Close', onclick: close }, '✕')),
-      h('div.modal-body', {}, body),
-      actions.length ? h('div.modal-foot', {}, actions.map((a) => h(`button.btn.${a.kind || 'btn-ghost'}`, { type: 'button', onclick: () => a.run(close) }, a.label))) : null,
-    ));
-  document.addEventListener('keydown', esc);
-  root.append(bg);
-  bg.querySelector('input,textarea,select,button.btn-primary,button.btn-accent')?.focus();
+  const close = () => dialog.close();
+  const dialog = h(`dialog.modal${wide ? '.is-wide' : ''}`, { 'aria-label': title },
+    h('div.modal-head', {}, h('h2', {}, title), h('button.icon-btn', { type: 'button', 'aria-label': 'Close', onclick: close }, '✕')),
+    h('div.modal-body', {}, body),
+    actions.length ? h('div.modal-foot', {}, actions.map(a => h(`button.btn.${a.kind || 'btn-ghost'}`, { type: 'button', onclick: () => a.run(close) }, a.label))) : null);
+  dialog.addEventListener('close', () => { dialog.remove(); previous?.focus(); onClose?.(); }, { once: true });
+  root.append(dialog);
+  dialog.showModal();
   return close;
 }
 
@@ -716,10 +714,13 @@ function listField(f, obj, ctx) {
         title.replaceChildren(t || h('span.muted', {}, `Untitled ${f.itemNoun || 'item'}`));
       };
       setTitle();
-      const head = h('div.li-head', { onclick: () => { open ? openItems.delete(item) : openItems.add(item); draw(); } },
-        handle(card), h('span.li-caret', {}, '›'),
-        f.badge ? h('span.li-badge', {}, f.badge(item)) : null,
-        title, actions(i));
+      const toggle = h('button.li-toggle', { type: 'button', 'aria-expanded': String(open), onclick: () => {
+        open ? openItems.delete(item) : openItems.add(item);
+        draw();
+        box.children[i]?.querySelector('.li-toggle')?.focus();
+      } }, h('span.li-caret', { 'aria-hidden': 'true' }, '›'),
+        f.badge ? h('span.li-badge', {}, f.badge(item)) : null, title);
+      const head = h('div.li-head', {}, handle(card), toggle, actions(i));
       card.append(head);
       if (open) {
         const body = h('div.li-body', {}, renderFields(fieldsFor(item), item, { ...ctx, rerender: draw }));
@@ -768,7 +769,7 @@ function newBlock(type) {
 
 function mediaCard(m, { pick, onDelete } = {}) {
   const thumb = m.kind === 'video' ? h('video', { src: m.url, muted: true, loop: true, playsInline: true, onmouseenter: (e) => e.target.play(), onmouseleave: (e) => e.target.pause() }) : m.kind === 'document' ? 'PDF' : h('img', { src: m.url, alt: '', loading: 'lazy' });
-  return h(`div.m-card${pick ? '.is-pick' : ''}`, { onclick: pick ? () => pick(m.url) : null },
+  return h(`${pick ? 'button' : 'div'}.m-card${pick ? '.is-pick' : ''}`, { ...(pick ? { type: 'button', 'aria-label': `Choose ${m.name}` } : {}), onclick: pick ? () => pick(m.url) : null },
     h('div.m-thumb', {}, thumb),
     h('div.m-info', {}, h('div.m-name', { title: m.name }, m.name), h('div.m-meta', {}, [m.dims ? `${m.dims.w}×${m.dims.h}` : m.kind, fmtBytes(m.size), m.used ? `used ${m.used}×` : 'unused'].join(' · '))),
     pick ? null : h('div.m-actions', {},
@@ -899,12 +900,19 @@ function projectsView() {
   const arr = state.content.projects;
   const list = h('div.proj-list');
   let dragFrom = null;
+  const moveProject = (from, to) => {
+    if (to < 0 || to >= arr.length || from === to) return;
+    const [project] = arr.splice(from, 1);
+    arr.splice(to, 0, project);
+    markDirty(); draw();
+    list.children[to]?.querySelector('.proj-title')?.focus();
+  };
   const draw = () => {
     list.replaceChildren(...arr.map((p, i) => {
       const thumb = p.cover ? (isVideo(p.cover) ? h('video', { src: p.cover, muted: true }) : h('img', { src: p.cover, alt: '' })) : (plain(p.title)[0] || '?');
       const row = h(`div.proj`, {},
         h('span.li-handle', { title: 'Drag to reorder', onmousedown: () => { row.draggable = true; }, onmouseup: () => { row.draggable = false; } }, '⋮⋮'),
-        h('div.proj-thumb', { style: `background:${p.accent || '#0E1830'}` }, thumb),
+        h('div.proj-thumb', { style: `background:${p.cover ? p.accent || '#0E1830' : '#0E1830'}` }, thumb),
         h('div.proj-main', {},
           h('a.proj-title', { href: `#/projects/${p.id}` }, plain(p.title) || 'Untitled project'),
           h('div.proj-meta', {},
@@ -912,6 +920,8 @@ function projectsView() {
             h(`span.badge${p.published ? '.is-live' : '.is-draft'}`, {}, p.published ? 'On site' : 'Hidden'),
             h('span', {}, p.category || ''))),
         h('div.proj-actions', {},
+          h('button.icon-btn', { type: 'button', 'aria-label': `Move ${plain(p.title)} up`, disabled: i === 0, onclick: () => moveProject(i, i - 1) }, '↑'),
+          h('button.icon-btn', { type: 'button', 'aria-label': `Move ${plain(p.title)} down`, disabled: i === arr.length - 1, onclick: () => moveProject(i, i + 1) }, '↓'),
           h('label.toggle', { title: 'Show on site' }, h('input', { type: 'checkbox', checked: p.published, onchange: (e) => { p.published = e.target.checked; markDirty(); draw(); } }), h('span.track')),
           h('a.btn.btn-ghost.btn-sm', { href: `#/projects/${p.id}` }, 'Edit'),
           h('button.btn.btn-ghost.btn-sm', { type: 'button', onclick: () => preview(p.kind === 'case-study' ? `/work/${p.slug}` : '/#work') }, 'Preview'),
@@ -926,7 +936,7 @@ function projectsView() {
       row.addEventListener('dragleave', () => row.classList.remove('is-over'));
       row.addEventListener('drop', (e) => {
         e.preventDefault(); row.classList.remove('is-over');
-        if (dragFrom != null && dragFrom !== i) { const [x] = arr.splice(dragFrom, 1); arr.splice(i, 0, x); markDirty(); draw(); }
+        if (dragFrom != null) moveProject(dragFrom, i);
         dragFrom = null;
       });
       return row;
@@ -935,7 +945,7 @@ function projectsView() {
   };
   draw();
   return [
-    pageHead('Projects', 'Drag to reorder. Featured case studies form the homepage chapters in this order. Other products appear as expandable rows.', [
+    pageHead('Projects', 'Use the arrow buttons or drag to reorder. Featured case studies form the homepage chapters in this order. Other products appear as expandable rows.', [
       h('button.btn.btn-accent', { type: 'button', onclick: () => newProjectDialog() }, '+ New project'),
     ]),
     list,
@@ -1071,7 +1081,7 @@ async function route(keepScroll = false) {
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   const [section = '', a, b] = parts;
   drawNav(section);
-  document.body.classList.remove('sb-open');
+  setSidebar(false);
   let nodes;
   try {
     switch (section) {
@@ -1153,7 +1163,14 @@ $('#logoutBtn').addEventListener('click', async () => {
   state.content = null; state.dirty = false;
   showLogin();
 });
-$('#sbToggle').addEventListener('click', () => document.body.classList.toggle('sb-open'));
+function setSidebar(open) {
+  document.body.classList.toggle('sb-open', open);
+  $('#sbToggle').setAttribute('aria-expanded', String(open));
+}
+$('#sbToggle').addEventListener('click', () => setSidebar(!document.body.classList.contains('sb-open')));
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.body.classList.contains('sb-open')) { setSidebar(false); $('#sbToggle').focus(); }
+});
 addEventListener('hashchange', () => route());
 addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); }
@@ -1163,3 +1180,13 @@ addEventListener('beforeunload', (e) => { if (state.dirty) persistDraft(); if (s
 setInterval(() => { if (!state.dirty && !state.saving && state.content) updateStatus(); }, 30000);
 
 boot();
+
+const appearance = $('#appearanceBtn');
+function setAppearance(dark) {
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  appearance.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
+  appearance.setAttribute('aria-pressed', String(dark));
+  try { localStorage.setItem('cms-appearance', dark ? 'dark' : 'light'); } catch {}
+}
+try { setAppearance(localStorage.getItem('cms-appearance') === 'dark'); } catch { setAppearance(false); }
+appearance.addEventListener('click', () => setAppearance(document.documentElement.dataset.theme !== 'dark'));

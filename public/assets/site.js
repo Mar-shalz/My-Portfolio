@@ -21,7 +21,7 @@
   };
   themeButtons.forEach((button) => button.addEventListener('click', () => {
     html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('theme', html.dataset.theme); } catch {}
+    try { localStorage.setItem('portfolio-appearance', html.dataset.theme); } catch {}
     updateThemeControls();
   }));
   updateThemeControls();
@@ -267,6 +267,9 @@
     ['--portrait-rx', 'y', -1, 'deg'], ['--portrait-ry', 'x', 1, 'deg'],
     ['--portrait-x', 'x', 1, 'px'], ['--portrait-y', 'y', 1, 'px'],
   ], 3, portrait.closest('.hero-portrait')));
+  d.querySelectorAll('.story-cover-link > img').forEach((art) => pointerEffect(art, [
+    ['--art-rx', 'y', -1, 'deg'], ['--art-ry', 'x', 1, 'deg'],
+  ], 2, art.parentElement));
   finePointer.addEventListener('change', () => pointerResets.forEach((reset) => reset()));
 
   // Native modal semantics provide focus containment, Escape, and an inert page.

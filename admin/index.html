@@ -12,7 +12,7 @@
 </head>
 <body>
 <div id="app" hidden>
-  <aside class="sb">
+  <aside class="sb" id="sidebar">
     <a class="sb-brand" href="#/">
       <span class="sb-mark">V</span>
       <span><strong>Portfolio</strong><small>Content portal</small></span>
@@ -25,9 +25,10 @@
   </aside>
   <div class="main">
     <header class="top">
-      <button class="icon-btn sb-toggle" type="button" id="sbToggle" aria-label="Menu">☰</button>
+      <button class="icon-btn sb-toggle" type="button" id="sbToggle" aria-label="Menu" aria-expanded="false" aria-controls="sidebar">☰</button>
       <div class="crumbs" id="crumbs"></div>
       <div class="top-actions">
+        <button class="btn btn-ghost" id="appearanceBtn" type="button" aria-label="Switch to dark theme">Appearance</button>
         <span class="status" id="status"></span>
         <button class="btn btn-ghost" type="button" id="previewBtn">Preview</button>
         <button class="btn btn-primary" type="button" id="saveBtn">Publish changes</button>
