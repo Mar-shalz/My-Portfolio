@@ -1,6 +1,6 @@
 {
-  "_rev": 35,
-  "updatedAt": "2026-11-12T18:54:53.198Z",
+  "_rev": 36,
+  "updatedAt": "2026-11-12T18:56:29.803Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -446,6 +446,10 @@
         {
           "label": "Dependency",
           "value": "E-Token for login and transaction authorization"
+        },
+        {
+          "label": "Team",
+          "value": "Me, 1 Product Designer, 5 Engineers, 2 Devops, 1 PM, 2 QA"
         }
       ],
       "blocks": [
