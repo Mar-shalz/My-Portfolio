@@ -1,6 +1,6 @@
 {
-  "_rev": 38,
-  "updatedAt": "2026-11-12T18:58:32.693Z",
+  "_rev": 39,
+  "updatedAt": "2026-11-12T18:59:53.257Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -576,6 +576,10 @@
           "value": "Product Designer · end-to-end ownership"
         },
         {
+          "label": "Team",
+          "value": "Me, 2 engineers, 2 QA, 1 PM, 2 Devops"
+        },
+        {
           "label": "Stage",
           "value": "TestFlight QA · internal testing"
         },
@@ -586,10 +590,6 @@
         {
           "label": "Purpose",
           "value": "Login and transaction authorization"
-        },
-        {
-          "label": "Team",
-          "value": "Me, 2 engineers, 2 QA, 1 PM"
         }
       ],
       "links": [],
@@ -687,7 +687,12 @@
       "storyOutcome": "Implemented and in TestFlight QA and internal testing. Public release is planned with Internet Banking; it has not launched publicly.",
       "storyNext": "Different responsibilities. The same habit: stay close to the work as it becomes real.",
       "shortTitle": "E-Token",
-      "tools": []
+      "tools": [
+        "Figma",
+        "Jira",
+        "Adobe Creative Suite",
+        "Chatgpt"
+      ]
     },
     {
       "id": "chopbaze-website",
