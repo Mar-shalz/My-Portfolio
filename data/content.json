@@ -1,6 +1,6 @@
 {
-  "_rev": 40,
-  "updatedAt": "2026-11-12T19:00:54.782Z",
+  "_rev": 41,
+  "updatedAt": "2026-11-12T19:42:24.172Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1779,7 +1779,7 @@
       "EdTech",
       "Gov / Civic"
     ],
-    "homeTone": "ink",
+    "homeTone": "sage",
     "portraitMotion": true,
     "principle": "The industry can change. My starting point stays the same: understand the people, the business and the task."
   },
