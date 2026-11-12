@@ -1,6 +1,6 @@
 {
-  "_rev": 36,
-  "updatedAt": "2026-11-12T18:56:29.803Z",
+  "_rev": 37,
+  "updatedAt": "2026-11-12T18:57:40.381Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -129,7 +129,7 @@
         },
         {
           "label": "Team",
-          "value": "Me, 1 other product designer, 1 PM, 5 engineers, 2 QA"
+          "value": "Me, 1 other product designer, 1 PM, 5 engineers, 2 QA, 2 Devops"
         },
         {
           "label": "Timeline",
@@ -404,7 +404,11 @@
       "storyOutcome": "The implemented app brought new customers into a digital channel; 41K+ total registered accounts span different KYC and activation stages.",
       "storyNext": "Next: extend the banking experience to the browser.",
       "shortTitle": "Mobile Banking",
-      "tools": []
+      "tools": [
+        "Figma",
+        "Jira",
+        "Adobe Suite"
+      ]
     },
     {
       "id": "fast-credit-internet-banking",
