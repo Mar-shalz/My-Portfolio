@@ -1,6 +1,6 @@
 {
-  "_rev": 42,
-  "updatedAt": "2026-11-12T19:46:44.376Z",
+  "_rev": 43,
+  "updatedAt": "2026-11-12T19:47:01.374Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1780,7 +1780,7 @@
       "Gov / Civic"
     ],
     "homeTone": "ink",
-    "portraitMotion": false,
+    "portraitMotion": true,
     "principle": "The industry can change. My starting point stays the same: understand the people, the business and the task."
   },
   "contact": {
