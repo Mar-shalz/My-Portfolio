@@ -1,6 +1,6 @@
 {
-  "_rev": 39,
-  "updatedAt": "2026-11-12T18:59:53.257Z",
+  "_rev": 40,
+  "updatedAt": "2026-11-12T19:00:54.782Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -129,7 +129,7 @@
         },
         {
           "label": "Team",
-          "value": "Me, 1 other product designer, 1 PM, 5 engineers, 2 QA, 2 Devops"
+          "value": "Me, 1 product designer, 1 PM, 5 engineers, 2 QA, 2 Devops"
         },
         {
           "label": "Timeline",
