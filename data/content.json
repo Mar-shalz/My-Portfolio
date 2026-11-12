@@ -1,6 +1,6 @@
 {
-  "_rev": 37,
-  "updatedAt": "2026-11-12T18:57:40.381Z",
+  "_rev": 38,
+  "updatedAt": "2026-11-12T18:58:32.693Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -453,7 +453,7 @@
         },
         {
           "label": "Team",
-          "value": "Me, 1 Product Designer, 5 Engineers, 2 Devops, 1 PM, 2 QA"
+          "value": "Me, 1 Product Designer, 5 Engineers, 2 Devops, 1 PM, 2 QA, 2 Devops"
         }
       ],
       "blocks": [
@@ -541,7 +541,11 @@
       "storyOutcome": "In development as the mobile app’s web counterpart, with launch planned alongside E-Token.",
       "storyNext": "A connected challenge sits alongside it: how people sign in and authorize transactions.",
       "shortTitle": "Internet Banking",
-      "tools": []
+      "tools": [
+        "Figma",
+        "Jira",
+        "Adobe Suite"
+      ]
     },
     {
       "id": "fast-credit-etoken",
