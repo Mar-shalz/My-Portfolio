@@ -1,6 +1,6 @@
 {
-  "_rev": 32,
-  "updatedAt": "2026-11-12T17:12:34.791Z",
+  "_rev": 33,
+  "updatedAt": "2026-11-12T17:13:49.902Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -717,6 +717,10 @@
         {
           "label": "Context",
           "value": "Co-founder of Chopbaze"
+        },
+        {
+          "label": "Team",
+          "value": "Me, 1 Product Designer"
         }
       ],
       "links": [
@@ -763,7 +767,11 @@
           "body": "I used AI to develop the entire website. I own the implementation work, while selected design sections were delegated to a designer working under my direction. The presentation mockup above uses captures of the live site; the original captures are shown here."
         }
       ],
-      "tools": [],
+      "tools": [
+        "Figma",
+        "Claude Code",
+        "Chatgpt"
+      ],
       "storyTitle": "A shared table. *A digital experience.*",
       "storyContext": "Leading the website design and personally developing the complete site with AI assistance.",
       "storyContribution": "I lead the design, delegate selected sections and review the work. All AI-assisted website development is mine.",
