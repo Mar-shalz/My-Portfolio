@@ -1,6 +1,6 @@
 {
-  "_rev": 27,
-  "updatedAt": "2026-11-12T16:25:38.409Z",
+  "_rev": 28,
+  "updatedAt": "2026-11-12T16:36:26.085Z",
   "site": {
     "name": "Victor Ajibodu",
     "initial": "V",
@@ -1642,7 +1642,7 @@
   "about": {
     "eyebrow": "03 / The person behind the work",
     "title": "In the details.\n*Alongside the team.*",
-    "portrait": "",
+    "portrait": "/uploads/polished-corporate-portrait-in-navy-suit-ece7ff.png",
     "preview": "I’m a **Product Design and UI/UX Lead at Fast Credit Limited**, based in Lagos, with 6+ years in product design across fintech, commerce and SaaS.\n\nI currently lead a team of designers. I led design for the company’s first mobile app, own E-Token’s design end to end and guide the team building Internet Banking. Across domains, I enjoy both the detail of an interface and the collaboration that turns a new idea into a working product.\n\nI work confidently with **Claude and ChatGPT across design, research and coding**. They are part of how I explore ideas, make sense of research, prototype interactions and turn designs into working experiences.",
     "pageTitle": "I design products that *work in the real world.*",
     "pageLead": "I work across **hands-on product design, design leadership and implementation collaboration**.",
